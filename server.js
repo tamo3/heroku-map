@@ -3,7 +3,15 @@ const path = require('path');
 const app = express();
 const port = process.env.PORT || 5000;
 
-app.use(express.static(path.join(__dirname, 'client/build')));
+// app.use(express.static(path.join(__dirname, 'client/build')));
+console.log('PUBLIC_URL is: ', process.env.PUBLIC_URL);
+
+if(process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, 'client/build')));  
+}
+else { // TT: not sure if this is needed.
+  app.use(express.static(path.join(__dirname, 'client/public')));  
+}
 
 // console.log that your server is up and running
 app.listen(port, () => console.log(`Listening on port ${port}`));
