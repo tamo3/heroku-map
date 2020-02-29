@@ -5,7 +5,8 @@
     "start": "node server.js"
   },
   "dependencies": {
-    "express": "4.17.1"
+    "express": "4.17.1",
+    "path": "^0.12.7"
   },
   "author": "Mirko Draganic, Tamotsu Tanabe, Brandon Altermatt",
   "license": "ISC"
