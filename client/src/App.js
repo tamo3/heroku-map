@@ -1,19 +1,7 @@
 import React, { Component } from 'react';
-// import logo from './logo.svg';
 import './App.css';
-import { Map, Marker, GoogleApiWrapper } from 'google-maps-react'
+import MapContainer from './Map.js';
 
-const mapKey = 'AIzaSyBdBb3UJJAFYHU76vXhd_sBoSdvVJk6WaI';
-// class MyMap extends Component {
-//   render() {
-//     return (
-//       <div className="MyMap">
-//         Hello World!
-//         <Map google={this.props.google} />
-//       </div>
-//     )
-//   }
-// }
 
 class App extends Component {
   state = {
@@ -43,15 +31,12 @@ class App extends Component {
         </header>
         <h3>Here is what returned from Express server: </h3>
         <p className="App-intro">{this.state.data}</p>
-        <Map google={this.props.google} />
+        <MapContainer  />
         <div id="debug-div">(for debugging)</div>
       </div>
     );
   }
 }
   
-// export default App;
-export default GoogleApiWrapper({
-  apiKey: (mapKey)
- })(App);
+export default App;
 
