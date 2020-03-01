@@ -7,85 +7,75 @@ const app = express();
 const port = process.env.PORT || 5000;  // Use given port when deployed, or localhost:5000.
 
 
+
+
+
 // Referense: https://github.com/mongolab/mongodb-driver-examples/blob/master/nodejs/mongooseSimpleExample.js
 const dbUrl = 'mongodb://heroku_tvsq48kq:7rv7942mg8365kipoj8a8rad2i@ds139342.mlab.com:39342/heroku_tvsq48kq';
 mongoose.connect(dbUrl);
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
-
 db.once('open', function callback() {
 
-  // Create song schema
-  let songSchema = mongoose.Schema({
-    decade: String,
-    artist: String,
-    song: String,
-    weeksAtOne: Number
+  // Create event schema.
+  let eventSchema = mongoose.Schema({
+    start: String,
+    end: String,
+    name: String,
+    loc: { // Reference: https://mongoosejs.com/docs/geojson.html
+      type: {
+        type: String,
+        enum: ['Point']
+      },
+      coordinates: {
+        type: [Number]
+      }
+    },
+    web: String,
+    desc: String
   });
 
-  // Store song documents in a collection called "songs"
-  let Song = mongoose.model('songs', songSchema);
+  // Store event documents in a collection called "events"
+  let Event = mongoose.model('events', eventSchema);
 
-  // Create seed data
-  let seventies = new Song({
-    decade: '1970s',
-    artist: 'Debby Boone',
-    song: 'You Light Up My Life',
-    weeksAtOne: 10
+  // Create sample events.
+  let dining = new Event({
+    start: '2020-03-01T09:00:00.000-8:00',
+    end: '2020-03-31T09:00:00.000-8:00',
+    name: 'Portland Dining Month',
+    loc: {
+      type: "Point",
+      coordinates: [-122.698687, 45.526974 ]  // [lng, lat] -- different from Google Map!  Need to swap!
+    },
+    web: 'https://www.travelportland.com/dining-month/?neighborhood=all&cuisine=all',
+    desc: 'Every March, the city’s top restaurants offer three-course meals for a great price, making it the best time to experience one of the nation’s most talked-about culinary destinations – affordably.'
+  });
+  let tmpEvent = new Event({
+    start: '2020-03-01T09:00:00.000-8:00',
+    end: '2020-03-31T09:00:00.000-8:00',
+    name: 'Test event @PSU',
+    loc: {
+      type: "Point",
+      coordinates: [-122.680712, 45.509871 ]  // [lng, lat] -- different from Google Map!  Need to swap!
+    },
+    web: 'https://www.travelportland.com/dining-month/?neighborhood=all&cuisine=all',
+    desc: 'This is just an example.'
   });
 
-  let eighties = new Song({
-    decade: '1980s',
-    artist: 'Olivia Newton-John',
-    song: 'Physical',
-    weeksAtOne: 10
-  });
+  let list = [dining, tmpEvent];
 
-  let nineties = new Song({
-    decade: '1990s',
-    artist: 'Mariah Carey',
-    song: 'One Sweet Day',
-    weeksAtOne: 16
-  });
-
-  /*
-   * First we'll add a few songs. Nothing is required to create the
-   * songs collection; it is created automatically when we insert.
-   */
-
-  let list = [seventies, eighties, nineties]
-
-  Song.insertMany(list).then(() => {
-
-    /*
-     * Then we need to give Boyz II Men credit for their contribution
-     * to the hit "One Sweet Day".
-     */
-
-    return Song.update({ song: 'One Sweet Day'}, { $set: { artist: 'Mariah Carey ft. Boyz II Men'} })
-
-  }).then(() => {
-
-    /*
-     * Finally we run a query which returns all the hits that spend 10 or
-     * more weeks at number 1.
-     */
-
-    return Song.find({ weeksAtOne: { $gte: 10} }).sort({ decade: 1})
-
-  }).then(docs => {
-
+  Event.insertMany(list)    // Insert to the DB.
+  .then(() => {             // Query example.
+    return Event.find({ $query: {}, $orderby: {start: 1}});
+   
+  }).then(docs => {         // Print to console.
     docs.forEach(doc => {
-      console.log(
-        'In the ' + doc['decade'] + ', ' + doc['song'] + ' by ' + doc['artist'] +
-        ' topped the charts for ' + doc['weeksAtOne'] + ' straight weeks.'
-      );
+      console.log('Name of event: ' + doc['name'] + 'web: ' + doc['web']);
     });
 
   }).then(() => {
-
     // Since this is an example, we'll clean up after ourselves.
-    return mongoose.connection.db.collection('songs').drop()
+    return mongoose.connection.db.collection('events').drop()
 
   }).then(() => {
 
