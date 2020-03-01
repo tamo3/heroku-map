@@ -2,6 +2,19 @@
   text-align: center;
 }
 
+.container {
+  display: flex;
+  flex-direction: row;
+}
+.box {
+  margin: 10px;
+}
+.left {
+  text-align: left;
+}
+.main {
+  width: 100%;
+}
 /* .App-logo {
   height: 40vmin;
   pointer-events: none;

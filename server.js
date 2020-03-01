@@ -1,3 +1,5 @@
+// Reference: https://medium.com/@maison.moa/setting-up-an-express-backend-server-for-create-react-app-bc7620b20a61
+
 const express = require('express');
 const path = require('path');
 const app = express();

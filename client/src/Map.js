@@ -28,6 +28,8 @@ export class MapContainer extends Component {
       return <div>Loading...</div>;
     }
 
+    // const google = this.props.google;
+
     return (
       <div
         style={{
@@ -41,16 +43,15 @@ export class MapContainer extends Component {
             lat: 45.509871,
             lng:  -122.680712
           }}>
-          {/* <Marker
+          <Marker
             onClick={this.onMarkerClick}
-            icon={{
-              url: "/img/icon.svg",
-              anchor: new google.maps.Point(32, 32),
-              scaledSize: new google.maps.Size(64, 64)
-            }}
+            // icon={{ // custom icon here!
+            //   url: "/img/icon.svg",
+            //   anchor: new google.maps.Point(32, 32),
+            //   scaledSize: new google.maps.Size(64, 64)
+            // }}
             name={"Current location"}
-          /> */}
-          
+          />
           <InfoWindow
             marker={this.state.activeMarker}
             visible={this.state.showingInfoWindow}

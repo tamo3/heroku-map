@@ -29,10 +29,17 @@ class App extends Component {
         <header className="App-header">
           <h1 className="App-title">PDX Event Map!</h1>
         </header>
-        <h3>Here is what returned from Express server: </h3>
-        <p className="App-intro">{this.state.data}</p>
-        <MapContainer  />
-        <div id="debug-div">(for debugging)</div>
+        <div className="container">
+          <div className="box left">
+            <p>Left box<br/>
+            todo: add menu</p>
+          </div>
+          <div className="box main">
+            <h3>Express server returned: {this.state.data}</h3>
+            <MapContainer />
+          </div>
+        </div>
+        <div id="debug-div">(this section is for debugging)</div>
       </div>
     );
   }
