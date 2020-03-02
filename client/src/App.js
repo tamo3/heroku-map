@@ -42,7 +42,12 @@ class App extends Component {
   }
 
   render() {
-    return (
+      const myLocations = [  //todo: These are just a test data for debugging. Should be removed for production.
+        { title: 'tmp FAB building', location: { lat: 45.509871, lng: -122.680712 } },
+        { title: 'tmp Chopolios', location: { lat:45.509677, lng:  -122.681626 } },
+      ];
+
+      return (
       <div className="App">
         <header className="App-header">
           <h1 className="App-title">PDX Event Map!</h1>
@@ -55,7 +60,7 @@ class App extends Component {
             />  
           </div>
           <div className="box main">
-            <MapContainer />
+            <MapContainer locations={myLocations}/>
           </div>
         </div>
         <div id="debug-div">(this section is for debugging)

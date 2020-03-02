@@ -14,10 +14,7 @@ export class MapContainer extends Component {
       showingInfoWindow: false,
       activeMarker: {},
       selectedPlace: {},
-      locations: [  //todo: These are just a test data for debugging. Should be removed for production.
-        { title: 'tmp FAB building', location: { lat: 45.509871, lng: -122.680712 } },
-        { title: 'tmp Chopolios', location: { lat:45.509677, lng:  -122.681626 } },
-      ]
+      locations: props.locations,
     };
   }
   onMarkerClick(props, marker, e) {
