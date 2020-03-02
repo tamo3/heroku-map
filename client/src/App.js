@@ -25,6 +25,14 @@ class App extends Component {
       .catch(error => console.log(error));
   }
 
+  // Callback function when data is arrived.
+
+  calllbackGotData(dat) {
+    console.log(dat);
+    this.setState({ data: JSON.stringify(dat)}); // Print to debug area.
+    // Update marker on the map?
+  }
+
   render() {
     return (
       <div className="App">
@@ -33,7 +41,7 @@ class App extends Component {
         </header>
         <div className="container">
           <div className="box left">
-            <Menu />
+            <Menu cbGotData={(dat) => this.calllbackGotData(dat)} />  
           </div>
           <div className="box main">
             <MapContainer />

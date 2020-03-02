@@ -4,7 +4,7 @@ import './App.css';
 
 
 class Menu extends Component {
-  getData() {
+  getData(cbGotData) {
     console.log("test")
     fetch('/api')
     .then(resp => {
@@ -13,12 +13,13 @@ class Menu extends Component {
     })
     .then(data => {
       console.log(data);
+      cbGotData(data); // Call callback function.
     });
   }
   render() {
     return (
       <div>
-        <button type="button" onClick={() => this.getData()} title="get data from DB">Debug Get Events</button>
+        <button type="button" onClick={() => this.getData(this.props.cbGotData)} title="get data from DB">Debug Get Events</button>
         <p id="debug"></p>
       </div>
     )

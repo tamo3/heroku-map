@@ -34,7 +34,7 @@ export class MapContainer extends Component {
       <div
         style={{
           position: "relative",
-          height: "calc(100vh - 20px)"
+          height: "calc(100vh - 170px)"
         }}
       >
         <Map 

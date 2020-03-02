@@ -15,6 +15,9 @@
 .main {
   width: 100%;
 }
+#debug-div {
+  font-size: 10px;
+}
 /* .App-logo {
   height: 40vmin;
   pointer-events: none;
