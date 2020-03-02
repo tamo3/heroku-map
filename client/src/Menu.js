@@ -4,22 +4,18 @@ import './App.css';
 
 
 class Menu extends Component {
-  getData(cbGotData) {
-    console.log("test")
-    fetch('/api')
-    .then(resp => {
-      console.log(resp);
-      return resp.json();
-    })
-    .then(data => {
-      console.log(data);
-      cbGotData(data); // Call callback function.
-    });
+  getData(cbGetData) {
+    cbGetData(); // Call callback function.
   }
+  addData(cbAddData) {
+    cbAddData(); // Call callback function.
+  }
+
   render() {
     return (
       <div>
-        <button type="button" onClick={() => this.getData(this.props.cbGotData)} title="get data from DB">Debug Get Events</button>
+        <button type="button" onClick={() => this.getData(this.props.cbGetData)} title="get data from DB">Debug Get Events</button>
+        <button type="button" onClick={() => this.addData(this.props.cbAddData)} title="add data to DB">Debug Add Event</button>
         <p id="debug"></p>
       </div>
     )

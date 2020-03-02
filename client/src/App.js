@@ -11,26 +11,34 @@ class App extends Component {
   };
 
   componentDidMount() {
-    //console.log("aa");
     fetch('/express_backend')
       .then(response => {
-        // console.log("bb");
         return response.text();
       })
       .then(dat => {
         console.log(dat);
-        console.log("cc");
-        this.setState({ data: dat });
+        this.setState({ data: `Express server returned: ${dat}` });
       })
       .catch(error => console.log(error));
   }
 
-  // Callback function when data is arrived.
+  // Callback function when getting data from DB. 
+  callbackGetData() {
+    fetch('/api')
+    .then(resp => {
+      console.log(resp);
+      return resp.json();
+    })
+    .then(jdat => {
+      console.log(jdat);
+      this.setState({ data: JSON.stringify(jdat)}); // Print to debug area.
+      // todo: Update marker on the map?
+    });
+  }
 
-  calllbackGotData(dat) {
-    console.log(dat);
-    this.setState({ data: JSON.stringify(dat)}); // Print to debug area.
-    // Update marker on the map?
+  // Callback function when adding a new entry to DB.
+  callbackAddData() {
+    this.setState({ data: `todo: POST the new data to server.`});
   }
 
   render() {
@@ -41,14 +49,17 @@ class App extends Component {
         </header>
         <div className="container">
           <div className="box left">
-            <Menu cbGotData={(dat) => this.calllbackGotData(dat)} />  
+            <Menu 
+              cbGetData={() => this.callbackGetData()} 
+              cbAddData={() => this.callbackAddData()} 
+            />  
           </div>
           <div className="box main">
             <MapContainer />
           </div>
         </div>
         <div id="debug-div">(this section is for debugging)
-          <p>Express server returned: {this.state.data}</p>
+          <p>{this.state.data}</p>
         </div>
       </div>
     );
