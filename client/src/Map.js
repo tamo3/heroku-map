@@ -43,7 +43,7 @@ export class MapContainer extends Component {
             lat: 45.509871,
             lng:  -122.680712
           }}>
-          <Marker
+          {/* <Marker
             onClick={this.onMarkerClick}
             // icon={{ // custom icon here!
             //   url: "/img/icon.svg",
@@ -51,7 +51,7 @@ export class MapContainer extends Component {
             //   scaledSize: new google.maps.Size(64, 64)
             // }}
             name={"Current location"}
-          />
+          /> */}
           <InfoWindow
             marker={this.state.activeMarker}
             visible={this.state.showingInfoWindow}
