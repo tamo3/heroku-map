@@ -9,6 +9,29 @@ const dbUrl = 'mongodb://heroku_tvsq48kq:7rv7942mg8365kipoj8a8rad2i@ds139342.mla
 let dbConnected = false;
 
 
+// Define event schema.
+const eventSchema = mongoose.Schema({
+  start: String,
+  end: String,
+  name: String,
+  loc: { // Reference: https://mongoosejs.com/docs/geojson.html
+    type: {
+      type: String,
+      enum: ['Point']
+    },
+    coordinates: {
+      type: [Number]
+    }
+  },
+  web: String,
+  desc: String
+});
+
+// Store event documents in a collection called "events"
+const Event = mongoose.model('events', eventSchema);
+
+
+// For debugging: print data to console.
 function debugListEvents(ev, db) {
   ev.find({ $query: {}, $orderby: { start: 1 } }).then(docs => {         // Print to console.
     docs.forEach(doc => {
@@ -19,9 +42,8 @@ function debugListEvents(ev, db) {
   })
 }
 
-
+// Function to cnnect to MongoDB.
 function connect() {
-
   // Referense: https://github.com/mongolab/mongodb-driver-examples/blob/master/nodejs/mongooseSimpleExample.js
   // https://mongoosejs.com/docs/
   mongoose.connect(dbUrl, { useNewUrlParser: true });
@@ -29,26 +51,7 @@ function connect() {
   db.on('error', console.error.bind(console, 'connection error:'));
   db.once('open', function callback() { // Callback on open.
 
-    // Create event schema.
-    let eventSchema = mongoose.Schema({
-      start: String,
-      end: String,
-      name: String,
-      loc: { // Reference: https://mongoosejs.com/docs/geojson.html
-        type: {
-          type: String,
-          enum: ['Point']
-        },
-        coordinates: {
-          type: [Number]
-        }
-      },
-      web: String,
-      desc: String
-    });
 
-    // Store event documents in a collection called "events"
-    let Event = mongoose.model('events', eventSchema);
 
     // Check if the database is empty, reference:// https://stackoverflow.com/questions/37459215/check-if-mongodb-database-is-empty-via-db-collection-count-doesnt-work
     db.db.collection('events').countDocuments((err, count) => {
@@ -88,27 +91,27 @@ function connect() {
           });
           let list = [dining, tmpEvent];
           Event.insertMany(list)    // Insert to the DB.
-          .then(() => {             // Query example.
-            dbConnected = true;
-            return Event.find({ $query: {}, $orderby: { start: 1 } });
-          })
-          .then(docs => {         // Print to console.
-            docs.forEach(doc => {
-              console.log('Name of event: ' + doc['name'] + 'web: ' + doc['web']);
-            });
-          })
-          // .then(() => {
-          //   // Since this is an example, we'll clean up after ourselves.
-          //   return mongoose.connection.db.collection('events').drop()
-          // })
-          // .then(() => {
-          //   // Only close the connection when your app is terminating
-          //   return mongoose.connection.close()
-          // })
-          .catch(err => {
-            // Log any errors that are thrown in the Promise chain
-            console.log(err)
-          })
+            .then(() => {             // Query example.
+              dbConnected = true;
+              return Event.find({ $query: {}, $orderby: { start: 1 } });
+            })
+            .then(docs => {         // Print to console.
+              docs.forEach(doc => {
+                console.log('Name of event: ' + doc['name'] + 'web: ' + doc['web']);
+              });
+            })
+            // .then(() => {
+            //   // Since this is an example, we'll clean up after ourselves.
+            //   return mongoose.connection.db.collection('events').drop()
+            // })
+            // .then(() => {
+            //   // Only close the connection when your app is terminating
+            //   return mongoose.connection.close()
+            // })
+            .catch(err => {
+              // Log any errors that are thrown in the Promise chain
+              console.log(err)
+            })
         }
       }
     })
@@ -119,4 +122,5 @@ function connect() {
 
 module.exports = {
   conntct: connect,     // Associate connect function as 'connect'.
+  Event: Event,         // Database model.
 };

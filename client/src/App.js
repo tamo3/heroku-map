@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import './App.css';
 import MapContainer from './Map.js';
+import { Menu } from './Menu.js';
+
 
 
 class App extends Component {
@@ -18,7 +20,7 @@ class App extends Component {
       .then(dat => {
         console.log(dat);
         console.log("cc");
-        this.setState({data: dat});
+        this.setState({ data: dat });
       })
       .catch(error => console.log(error));
   }
@@ -31,19 +33,19 @@ class App extends Component {
         </header>
         <div className="container">
           <div className="box left">
-            <p>Left box<br/>
-            todo: add menu</p>
+            <Menu />
           </div>
           <div className="box main">
-            <h3>Express server returned: {this.state.data}</h3>
             <MapContainer />
           </div>
         </div>
-        <div id="debug-div">(this section is for debugging)</div>
+        <div id="debug-div">(this section is for debugging)
+          <p>Express server returned: {this.state.data}</p>
+        </div>
       </div>
     );
   }
 }
-  
+
 export default App;
 

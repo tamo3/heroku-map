@@ -22,10 +22,26 @@ else { // TT: not sure if this is needed.
 // console.log that your server is up and running
 app.listen(port, () => console.log(`Listening on port ${port}`));
 
-// create a GET route
+// Route: /express_backend -- for debugging.
 app.get('/express_backend', (req, res) => {
-  console.log('server app.get called');
+  console.log('server app.get /express_backend called');
   res.send({ "express": "Hello from Express!" });
 });
+
+// Route for MongoDB access:
+app.get('/api', (req, res) => {
+  console.log('server app.get /api called');
+  myDb.Event.find({ $query: {}, $orderby: { start: 1 } }).then(docs => { 
+    let i = 0; 
+    docs.forEach(doc => { // Print to log for debugging.
+      console.log(`[${i}] : ` + doc['name'] + 'web: ' + doc['web']);
+    });
+    res.send(docs); // Send data as response.
+  }).catch(err => {
+    console.log(err)
+  })
+});
+
+// todo: Create/POST (for adding new data), DELETE (for deleting existing entry).
 
 
