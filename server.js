@@ -28,6 +28,8 @@ app.get('/express_backend', (req, res) => {
   res.send({ "express": "Hello from Express!" });
 });
 
+// Mongoose API: https://docs.mongodb.com/manual/reference/method/js-collection/
+
 // Route for MongoDB access:
 app.get('/api', (req, res) => {
   console.log('server app.get /api called');
