@@ -24,6 +24,8 @@ export class MapContainer extends Component {
       showingInfoWindow: true
     });
   }
+
+
   render() {
     if (!this.props.google) {
       return <div>Loading...</div>;
@@ -32,46 +34,39 @@ export class MapContainer extends Component {
     // const google = this.props.google;
 
     return (
-       <div
-        style={{
-          position: "relative",
-          height: "calc(100vh - 190px)"
-        }}
-      >
-        <Map 
-          style={{}} google={this.props.google} zoom={14}
-          initialCenter={{
-            lat: 45.509871,
-            lng:  -122.680712
-          }}>
-          {this.state.locations.map((item, i) => <Marker 
-            name={item.title}
-            title={item.title}
-            position={{lat: item.location.lat, lng: item.location.lng}} 
-            onClick={this.onMarkerClick}
-            />) }
-          {/* <Marker
-            onClick={this.onMarkerClick}
-            // icon={{ // custom icon here!
-            //   url: "/img/icon.svg",
-            //   anchor: new google.maps.Point(32, 32),
-            //   scaledSize: new google.maps.Size(64, 64)
-            // }}
-            name={"Current location"}
-          /> */}
-          <InfoWindow
-            marker={this.state.activeMarker}
-            visible={this.state.showingInfoWindow}
-          >
-            <div>
-              <h1>{this.state.selectedPlace.name}</h1>
-            </div>
-          </InfoWindow>
-        </Map>
-      </div>
-    );
+      <div
+       style={{
+         position: "relative",
+         height: "calc(100vh - 190px)"
+       }}
+     >
+       <Map 
+         style={{}} google={this.props.google} zoom={14}
+         initialCenter={{
+           lat: 45.509871,
+           lng:  -122.680712
+         }}>
+         {this.state.locations.map((item, i) => <Marker 
+           name={item.title}
+           title={item.title}
+           position={{lat: item.location.lat, lng: item.location.lng}} 
+           onClick={this.onMarkerClick}
+           />) }
+
+         <InfoWindow
+           marker={this.state.activeMarker}
+           visible={this.state.showingInfoWindow}
+         >
+           <div>
+             <h1>{this.state.selectedPlace.name}</h1>
+           </div>
+         </InfoWindow>
+       </Map>
+     </div>
+   );
   }
 }
+
 
 export default GoogleApiWrapper({
   apiKey: mapKey,
