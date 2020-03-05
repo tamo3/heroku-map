@@ -89,7 +89,18 @@ function connect() {
             web: 'https://www.travelportland.com/dining-month/?neighborhood=all&cuisine=all',
             desc: 'This is just an example.'
           });
-          let list = [dining, tmpEvent];
+          let tgc = new Event({
+            start: '2020-04-03T16:00:00Z',
+            end: '2020-04-06T22:00:00Z',
+            name: 'Transgender Clients: Assessment and Planning for Gender-affirming Medical Procedures',
+            loc: {
+              type: "Point",
+              coordinates: [-122.674043, 45.481716]  // [lng, lat] -- different from Google Map!  Need to swap!
+            },
+            web: 'https://www.travelportland.com/dining-month/?neighborhood=all&cuisine=all',
+            desc: '2-day course: Friday, April 3: 9am-3pm Monday, April 6: 9am-3pm COURSE DESCRIPTION Assisting people through gender-affirming medical care requires providers to have a wide array of relevant information about the medical procedures, as well as the historical and political context of the care that has an impact in the relationship. In this course, participants will learn how to collaborate with and prepare clients for transgender-affirming surgery, hormone therapy, and pubertal suppression using informed consent and facilitated progress frameworks. Participants will be exposed to the historical and current context of our role in medical care and build practices that can maximize trust with a vulnerable community. Participants will learn to conduct an assessment for factors that can complicate, or be complicated by, medical care; create a holistic treatment recommendation; and support clients through the steps of medical preparation and aftercare. Participants will be exposed to the fundamental dynamics of each gender-affirming surgery and hormone intervention that is currently covered by insurance. LEARNING OBJECTIVES Define WPATH, insurance, and surgeon requirements for quality letters and assessments. Establish trust with clients and present assessment from an informed consent model of care. Conduct a relevant mental health assessment for gender affirming surgery. Present the expectations for pubertal suppression, hormone therapy, chest reconstruction, breast augmentation, metoidioplasty, orchiectomy, hysterectomy/oophorectomy, phalloplasty, electrolysis, vaginoplasty, and vulvoplasty surgeries. Have concrete tools for preparing clients for medical processes. Write a comprehensive letter of support that is consistent with WPATH standards of care, insurance and surgeons criteria, and is respectful to client privacy. TRAINING MODALITIES During this training, participants will engage in didactic presentation, self-reflection, case reviews, videos of clients experiences, and paired role-play. After the training, participants pursuing CE credit will submit 1-2 mock letters of recommendation for review and feedback. Those who complete all parts of the training will be added to a vetted list of providers shared by Brave Space and community medical providers. Participants will gain access to the Brave Space Surgery Planning Guide, a helpful tool for perioperative planning, quality letter and assessment templates, and the Powerpoint slide for future reference. Participants are responsible for determining if CEs offered for this course meet board criteria for continuing education. A CE certificate, facilitator bio, and course description will be provided to attendees to use for CE submission.'
+          });
+          let list = [dining, tmpEvent, tgc];
           Event.insertMany(list)    // Insert to the DB.
             .then(() => {             // Query example.
               dbConnected = true;
