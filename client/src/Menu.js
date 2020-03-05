@@ -57,4 +57,3 @@ class Menu extends Component {
 }
 
 export { Menu };
-
