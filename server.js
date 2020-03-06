@@ -2,9 +2,14 @@
 const express = require('express');
 const path = require('path');
 const myDb = require('./database.js'); // Import databas.js module.
+var mongo = require('mongodb');
+var assert = require('assert');
 
 const app = express();
 const port = process.env.PORT || 5000;  // Use given port when deployed, or localhost:5000.
+
+var router = express.Router();
+var dbUrl = 'mongodb://heroku_tvsq48kq:7rv7942mg8365kipoj8a8rad2i@ds139342.mlab.com:39342/heroku_tvsq48kq';
 
 
 myDb.conntct(); // Connect to MongoDB.

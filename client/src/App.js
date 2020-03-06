@@ -10,7 +10,8 @@ class App extends Component {
     data: 'test',
     locations: [  //todo: These are just a test data for debugging. Should be removed for production.
       { title: 'tmp FAB building', location: { lat: 45.509871, lng: -122.680712 } },
-      { title: 'tmp Chopolios', location: { lat:45.509677, lng:  -122.681626 } },
+      { title: 'tmp Chopolios', location: { lat: 45.509677, lng:  -122.681626 } },
+      { title: '"Transgender Clients: Assessment and Planning for Gender-affirming Medical Procedures', location: { lat: 45.481716 , lng: -122.674043 } },
     ],
   };
 
@@ -36,6 +37,11 @@ class App extends Component {
     .then(jdat => {
       console.log(jdat);
       this.setState({ data: JSON.stringify(jdat)}); // Print to debug area.
+      jdat.forEach(item =>{
+        console.log("Name: ", item.name);
+        this.setState({ data: JSON.stringify(item.name)});
+        console.log("Location Coordinates: ", item.loc.coordinates)
+      })
       // todo: Update marker on the map?
     });
   }

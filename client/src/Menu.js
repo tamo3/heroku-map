@@ -3,7 +3,7 @@ import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Client from 'predicthq';
 
-var print = 0;
+var print = 1;
 
 // Client Secret : Wkuwi2B84jBH27rSfte0nAvOtI69HI7hCmVrouV4QIXm3tARXa_Sog
 // Access Token : TODGDOgZORwsYmZ-n_b4-on0JaWM2Vuqn8O2K-KU
@@ -17,8 +17,14 @@ const phqEvents = client.events;
 const logEventsToConsole = events => {
   for (const event of events) {
     // See https://developer.predicthq.com/resources/events/#fields for list of all event fields.
-    console.log(event);
-    if (print == 1) {
+    //console.log(event);
+    
+    Object.keys(event).forEach(function(key){
+      console.log(event[key]);
+      document.getElementById("json").innerHTML = JSON.stringify(event[key], undefined, 2);
+    });
+
+    if (print === 0) {
       document.getElementById("json").innerHTML = JSON.stringify(events, undefined, 2);
     }
   }
@@ -48,7 +54,7 @@ class Menu extends Component {
       <button type="button" class="dash-button btn btn-primary mb-1" onClick={() => this.getData(this.props.cbGetData)} title="get data from DB">Debug Get Events</button>
       <button type="button" class="dash-button btn btn-primary" onClick={() => this.addData(this.props.cbAddData)} title="add data to DB">Debug Add Event</button>
 
-      <p id="debug"></p>
+      <p id="debug"><br></br></p>
       <pre id="json"></pre>
 
     </div>
