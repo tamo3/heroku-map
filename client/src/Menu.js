@@ -51,12 +51,43 @@ class Menu extends Component {
   render() {
     return (
     <div>
-      <button type="button" class="dash-button btn btn-primary mb-1" onClick={() => this.getData(this.props.cbGetData)} title="get data from DB">Debug Get Events</button>
-      <button type="button" class="dash-button btn btn-primary" onClick={() => this.addData(this.props.cbAddData)} title="add data to DB">Debug Add Event</button>
-
-      <p id="debug"><br></br></p>
-      <pre id="json"></pre>
-
+      <div>
+        <button type="button" class="dash-button btn btn-primary mb-1" onClick={() => this.getData(this.props.cbGetData)} title="get data from DB">Debug Get Events</button>
+        <button type="button" class="dash-button btn btn-primary" onClick={() => this.addData(this.props.cbAddData)} title="add data to DB">Debug Add Event</button>   
+      </div>
+      <br></br>
+      <div>
+        <table class="table table-bg">
+          <thead class="thead-dark">
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Event</th>
+              <th scope="col">Location</th>
+              <th scope="col">Time</th>
+            </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">1</th>
+                <td>Test Event</td>
+                <td>Portland, OR</td>
+                <td>8AM</td>
+              </tr>
+              <tr>
+                <th scope="row">2</th>
+                <td>Test Event</td>
+                <td>Portland, OR</td>
+                <td>8AM</td>
+              </tr>
+              <tr>
+                <th scope="row">3</th>
+                <td>Test Event</td>
+                <td>Portland, OR</td>
+                <td>8AM</td>
+              </tr>
+              </tbody>
+          </table>
+        </div>
     </div>
     )
   }
