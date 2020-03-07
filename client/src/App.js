@@ -1,9 +1,40 @@
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
 import './App.css';
 import MapContainer from './Map.js';
 import { Menu } from './Menu.js';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { Button, Modal } from 'react-bootstrap';
 
 
+function Example() {
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
+  return (
+    <>
+      <Button variant="primary" onClick={handleShow}>
+        Launch demo modal
+      </Button>
+
+      <Modal show={show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Modal heading</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={handleClose}>
+            Save Changes
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </>
+  );
+}
 
 class App extends Component {
   state = {
@@ -44,11 +75,42 @@ class App extends Component {
       })
       // todo: Update marker on the map?
     });
+    // todo: add catch() to handle error.
   }
 
   // Callback function when adding a new entry to DB.
   callbackAddData() {
-    this.setState({ data: `todo: POST the new data to server.`});
+    const jdat = {
+      start: '',
+      end: '',
+      name: 'tmp event1',
+      loc: {
+        type: "Point",
+        coordinates: [-122.697687, 45.526974]  // [lng, lat] -- different from Google Map!  Need to swap!
+      },
+      web: '',
+      desc: ''
+    };
+    // Send POST message.
+    fetch('/api', {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json'
+      },      
+      body: JSON.stringify(jdat)
+    }).then(resp => {
+      return resp.text();
+    }).then(dat => {
+      console.log(`Reauest complete, resp: ${dat}`)
+    })
+    // todo: add catch() to handle error.
+    this.setState({ data: `todo: aaPOST the new data to server.`});
+  }
+
+  togglePopup() {
+    this.setState({
+      showPopup: !this.state.showPopup
+    });
   }
 
   render() {
@@ -62,10 +124,11 @@ class App extends Component {
             <Menu 
               cbGetData={() => this.callbackGetData()} 
               cbAddData={() => this.callbackAddData()} 
-            />  
+              />
           </div>
           <div className="box main">
-            <MapContainer locations={this.state.locations}/>
+            <Example />          
+            <MapContainer locations={this.state.locations} />
           </div>
         </div>
         <div id="debug-div">(this section is for debugging)

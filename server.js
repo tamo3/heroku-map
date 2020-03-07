@@ -23,6 +23,7 @@ if(process.env.NODE_ENV === 'production') {
 else { // TT: not sure if this is needed.
   app.use(express.static(path.join(__dirname, 'client/public')));  
 }
+app.use(express.json());
 
 // console.log that your server is up and running
 app.listen(port, () => console.log(`Listening on port ${port}`));
@@ -39,9 +40,10 @@ app.get('/express_backend', (req, res) => {
 app.get('/api', (req, res) => {
   console.log('server app.get /api called');
   myDb.Event.find({ $query: {}, $orderby: { start: 1 } }).then(docs => { 
-    let i = 0; 
+    let i = 1; 
     docs.forEach(doc => { // Print to log for debugging.
       console.log(`[${i}] : ` + doc['name'] + 'web: ' + doc['web']);
+      i++;
     });
     res.send(docs); // Send data as response.
   }).catch(err => {
@@ -49,6 +51,14 @@ app.get('/api', (req, res) => {
   })
 });
 
-// todo: Create/POST (for adding new data), DELETE (for deleting existing entry).
+app.post('/api', (req, res) => {
+  const list = req.body;
+  console.log(list);
+  myDb.Event.insertMany(list)    // Insert to the DB.
+  res.type('text/plain')
+  res.send('POST request completed');
+})
+
+// todo: create DELETE (for deleting existing entry).
 
 
