@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import './App.css';
 import MapContainer from './Map.js';
 import { Menu } from './Menu.js';
+import './App.css';
 
 
 
@@ -57,14 +57,14 @@ class App extends Component {
         <header className="App-header">
           <h1 className="App-title">PDX Event Map!</h1>
         </header>
-        <div className="container">
-          <div className="box left">
+        <div className="container row">
+          <div className="box left col-sm-4">
             <Menu 
               cbGetData={() => this.callbackGetData()} 
               cbAddData={() => this.callbackAddData()} 
             />  
           </div>
-          <div className="box main">
+          <div className="box main col">
             <MapContainer locations={this.state.locations}/>
           </div>
         </div>

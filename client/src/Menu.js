@@ -1,7 +1,8 @@
-import React, { Component } from 'react';
-import './App.css';
+import React, { Component, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { Button, Modal } from 'react-bootstrap';
 import Client from 'predicthq';
+import './App.css';
 
 var print = 1;
 
@@ -48,17 +49,24 @@ class Menu extends Component {
     cbAddData(); // Call callback function.
   }
 
+  togglePopup() {
+    this.setState({
+      showPopup: !this.state.showPopup
+    });
+  }
+ 
   render() {
     return (
     <div>
-      <div>
-        <button type="button" class="dash-button btn btn-primary mb-1" onClick={() => this.getData(this.props.cbGetData)} title="get data from DB">Debug Get Events</button>
-        <button type="button" class="dash-button btn btn-primary" onClick={() => this.addData(this.props.cbAddData)} title="add data to DB">Debug Add Event</button>   
+      <div >
+        <div className="row mb-1 "><button type="button" className="dash-button btn btn-block btn-primary" onClick={() => this.getData(this.props.cbGetData)} title="get data from DB">Debug Get Events</button></div>
+        <div className="row mb-1 "><button type="button" className="dash-button btn btn-block btn-primary" onClick={() => this.addData(this.props.cbAddData)} title="add data to DB">Debug Add Event</button>   </div>
+        <div className="row mb-1 "><About /></div>  
       </div>
       <br></br>
       <div>
-        <table class="table table-bg">
-          <thead class="thead-dark">
+        <table className="table table-bg">
+          <thead className="thead-dark">
             <tr>
               <th scope="col">#</th>
               <th scope="col">Event</th>
@@ -92,5 +100,39 @@ class Menu extends Component {
     )
   }
 }
+
+
+
+// React-Bootstrap, Modal: https://react-bootstrap.netlify.com/components/modal/#modals
+function About() {
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+  
+  return ( // Using the "Fragment Shortcut", '<>..</>' // See: https://reactjs.org/docs/fragments.html
+    <> 
+      <Button variant="primary" block onClick={handleShow} title="About"> 
+        About...
+      </Button>
+
+      <Modal show={show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>About...</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Developed by<br/>
+        Brandon<br/>
+        Mirko<br/>
+        Tamotsu<br/>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="primary" onClick={handleClose}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </>
+  );
+}
+
 
 export { Menu };

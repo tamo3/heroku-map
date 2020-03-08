@@ -2,6 +2,8 @@
 // const express = require('express');
 // const path = require('path');
 const mongoose = require('mongoose');
+// todo: need to test this!  mongoose.set('useUnifiedTopology', true); // Get rid of Deprecation warning.
+
 
 //  URL for Heroku/mLab MongoDB.
 const dbUrl = 'mongodb://heroku_tvsq48kq:7rv7942mg8365kipoj8a8rad2i@ds139342.mlab.com:39342/heroku_tvsq48kq';
