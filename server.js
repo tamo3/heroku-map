@@ -39,9 +39,10 @@ app.get('/express_backend', (req, res) => {
 app.get('/api', (req, res) => {
   console.log('server app.get /api called');
   myDb.Event.find({ $query: {}, $orderby: { start: 1 } }).then(docs => { 
-    let i = 0; 
+    let i = 1; 
     docs.forEach(doc => { // Print to log for debugging.
       console.log(`[${i}] : ` + doc['name'] + 'web: ' + doc['web']);
+      i++;
     });
     res.send(docs); // Send data as response.
   }).catch(err => {
