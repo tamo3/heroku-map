@@ -3,6 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Button, Modal } from 'react-bootstrap';
 import Client from 'predicthq';
 import './App.css';
+import logo from './logo.svg';
 
 var print = 1;
 
@@ -117,12 +118,24 @@ function About() {
 
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>About...</Modal.Title>
+          <Modal.Title>
+            <img src={logo} className="App-logo" alt="logo" />About...
+            </Modal.Title>
         </Modal.Header>
-        <Modal.Body>Developed by<br/>
-        Brandon<br/>
-        Mirko<br/>
-        Tamotsu<br/>
+        <Modal.Body>
+          <div className="about-container">
+            <div>
+              <b>Technologies:</b><br/>
+              MERN stack<br/>
+              2020 Winter Full Stack Web <a href="pdx.edu" target="_brank">@pdx.edu</a>
+            </div>
+            <div>
+            <b>Developed by:</b><br/>
+            Brandon<br/>
+            Mirko<br/>
+            <a href="https://tamo3.github.io/" target="_blank">Tamotsu</a><br/>
+            </div>
+          </div>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="primary" onClick={handleClose}>
