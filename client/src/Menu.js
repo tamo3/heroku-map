@@ -97,6 +97,23 @@ class Menu extends Component {
               </tbody>
           </table>
         </div>
+        <form>
+          <div class="form-group">
+            <label for="exampleInputEmail1">Event Name</label>
+            <input type="name" class="form-control" id="event_name" aria-describedby="emailHelp" placeholder="Event Name"></input>
+          </div>
+          <div class="form-group">
+            <label for="exampleInputPassword1">Event Location</label>
+            <input type="location" class="form-control" id="event_location" placeholder="Event Location"></input>
+          </div>
+          <div class="form-group">
+            <label for="exampleInputPassword1">Event Time</label>
+            <input type="time" class="form-control" id="event_time" placeholder="Event Time"></input>
+          </div>
+          <div>
+            <input type="submit" class="btn btn-info bg-primary" value="Add Event"></input>
+          </div>
+        </form>  
     </div>
     )
   }
