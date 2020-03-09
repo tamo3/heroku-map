@@ -94,6 +94,18 @@ class Menu extends Component {
                 <td>Portland, OR</td>
                 <td>8AM</td>
               </tr>
+              <tr>
+                <th scope="row">4</th>
+                <td>Test Event</td>
+                <td>Portland, OR</td>
+                <td>8AM</td>
+              </tr>
+              <tr>
+                <th scope="row">5</th>
+                <td>Test Event</td>
+                <td>Portland, OR</td>
+                <td>8AM</td>
+              </tr>
               </tbody>
           </table>
         </div>

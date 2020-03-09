@@ -84,3 +84,13 @@ html,body {
   color: #61dafb;
 }
 
+table tbody { 
+  height:300px; 
+  overflow-y:scroll; 
+  display:block; 
+}
+
+table thead { 
+  display:block; 
+}
+
