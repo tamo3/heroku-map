@@ -5,7 +5,6 @@ import Client from 'predicthq';
 import './App.css';
 import logo from './logo.svg';
 
-var print = 1;
 
 // Client Secret : Wkuwi2B84jBH27rSfte0nAvOtI69HI7hCmVrouV4QIXm3tARXa_Sog
 // Access Token : TODGDOgZORwsYmZ-n_b4-on0JaWM2Vuqn8O2K-KU
@@ -18,17 +17,16 @@ const phqEvents = client.events;
 
 const logEventsToConsole = events => {
   for (const event of events) {
+    console.log(event);
+    console.log();
     // See https://developer.predicthq.com/resources/events/#fields for list of all event fields.
-    //console.log(event);
     
+    /*document.getElementById("json").innerHTML = JSON.stringify(event, undefined, 2);
+
     Object.keys(event).forEach(function(key){
       console.log(event[key]);
       document.getElementById("json").innerHTML = JSON.stringify(event[key], undefined, 2);
-    });
-
-    if (print === 0) {
-      document.getElementById("json").innerHTML = JSON.stringify(events, undefined, 2);
-    }
+    });*/
   }
 };
 
@@ -111,15 +109,15 @@ class Menu extends Component {
         </div>
         <form>
           <div class="form-group">
-            <label for="exampleInputEmail1">Event Name</label>
+            <label className="event-name">Event Name</label>
             <input type="name" class="form-control" id="event_name" aria-describedby="emailHelp" placeholder="Event Name"></input>
           </div>
-          <div class="form-group">
-            <label for="exampleInputPassword1">Event Location</label>
+          <div className="form-group">
+            <label for="event-location">Event Location</label>
             <input type="location" class="form-control" id="event_location" placeholder="Event Location"></input>
           </div>
           <div class="form-group">
-            <label for="exampleInputPassword1">Event Time</label>
+            <label className="event-time">Event Time</label>
             <input type="time" class="form-control" id="event_time" placeholder="Event Time"></input>
           </div>
           <div>
@@ -159,10 +157,10 @@ function About() {
               2020 Winter Full Stack Web <a href="pdx.edu" target="_brank">@pdx.edu</a>
             </div>
             <div>
-            <b>Developed by:</b><br/>
-            Brandon<br/>
-            Mirko<br/>
-            <a href="https://tamo3.github.io/" target="_blank">Tamotsu</a><br/>
+              <b>Developed by:</b><br/>
+              Brandon<br/>
+              Mirko<br/>
+              <a href="https://tamo3.github.io/" target="_blank">Tamotsu</a><br/>
             </div>
           </div>
         </Modal.Body>
