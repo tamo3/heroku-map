@@ -102,7 +102,29 @@ function connect() {
             web: 'https://www.travelportland.com/dining-month/?neighborhood=all&cuisine=all',
             desc: ''
           });
-          let list = [dining, tmpEvent, tgc];
+          let pdm = new Event({
+            start: '2020-04-03T16:00:00Z',
+            end: '2020-04-06T22:00:00Z',
+            name: 'Portland Dining Month',
+            loc: {
+              type: "Point",
+              coordinates: [-122.698687, 45.526974]  // [lng, lat] -- different from Google Map!  Need to swap!
+            },
+            web: 'https://www.travelportland.com/dining-month/?neighborhood=all&cuisine=all',
+            desc: ''
+          });
+          let pjdm = new Event({
+            start: '2020-04-03T16:00:00Z',
+            end: '2020-04-06T22:00:00Z',
+            name: 'Something',
+            loc: {
+              type: "Point",
+              coordinates: [-122.693643, 45.546974]  // [lng, lat] -- different from Google Map!  Need to swap!
+            },
+            web: 'https://www.travelportland.com/dining-month/?neighborhood=all&cuisine=all',
+            desc: ''
+          });
+          let list = [dining, tmpEvent, tgc, pdm, pjdm];
           Event.insertMany(list)    // Insert to the DB.
             .then(() => {             // Query example.
               dbConnected = true;

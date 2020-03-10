@@ -84,7 +84,7 @@ html,body {
   color: #61dafb;
 }
 
-table tbody { 
+#events_table { 
   height:300px; 
   overflow-y:scroll; 
   display:block; 

@@ -39,6 +39,26 @@ phqEvents.search({within: withinParam})
   .then(logEventsToConsole)
   .catch(err => console.error(err));
 
+ function addEvent() {
+    var table = document.getElementById("events_table");
+    
+    var row= document.createElement("tr");
+    console.log(row);
+    var event_title = document.createElement("td");
+    var event_location = document.createElement("td");
+    var event_time = document.createElement("td");
+    
+    event_title.innerHTML = document.getElementById("event_title").value;
+    event_location.innerHTML  = document.getElementById("event_location").value;
+    event_time.innerHTML  = document.getElementById("event_time").value;
+  
+    row.appendChild(event_title);
+    row.appendChild(event_location);
+    row.appendChild(event_time);
+  
+    table.children[0].appendChild(row);
+  }
+
 class Menu extends Component {
 
   getData(cbGetData) {
@@ -53,7 +73,7 @@ class Menu extends Component {
       showPopup: !this.state.showPopup
     });
   }
- 
+
   render() {
     return (
     <div>
@@ -64,64 +84,31 @@ class Menu extends Component {
       </div>
       <br></br>
       <div>
-        <table className="table table-bg">
+        <table className="table table-bg" id="events_table">
           <thead className="thead-dark">
             <tr>
-              <th scope="col">#</th>
               <th scope="col">Event</th>
               <th scope="col">Location</th>
               <th scope="col">Time</th>
             </tr>
             </thead>
-            <tbody>
-              <tr>
-                <th scope="row">1</th>
-                <td>Test Event</td>
-                <td>Portland, OR</td>
-                <td>8AM</td>
-              </tr>
-              <tr>
-                <th scope="row">2</th>
-                <td>Test Event</td>
-                <td>Portland, OR</td>
-                <td>8AM</td>
-              </tr>
-              <tr>
-                <th scope="row">3</th>
-                <td>Test Event</td>
-                <td>Portland, OR</td>
-                <td>8AM</td>
-              </tr>
-              <tr>
-                <th scope="row">4</th>
-                <td>Test Event</td>
-                <td>Portland, OR</td>
-                <td>8AM</td>
-              </tr>
-              <tr>
-                <th scope="row">5</th>
-                <td>Test Event</td>
-                <td>Portland, OR</td>
-                <td>8AM</td>
-              </tr>
-              </tbody>
           </table>
         </div>
         <form>
           <div class="form-group">
             <label className="event-name">Event Name</label>
-            <input type="name" class="form-control" id="event_name" aria-describedby="emailHelp" placeholder="Event Name"></input>
+            <input type="text" class="form-control" name="event_title" id="event_title" aria-describedby="event_title" placeholder="Event Name"></input>
           </div>
           <div className="form-group">
             <label for="event-location">Event Location</label>
-            <input type="location" class="form-control" id="event_location" placeholder="Event Location"></input>
+            <input type="location" class="form-control" name="event_location" id="event_location" placeholder="Event Location"></input>
           </div>
           <div class="form-group">
             <label className="event-time">Event Time</label>
-            <input type="time" class="form-control" id="event_time" placeholder="Event Time"></input>
+            <input type="time" class="form-control" name="event_time" id="event_time" placeholder="Event Time"></input>
           </div>
           <div>
-            <input type="submit" class="btn btn-info bg-primary" value="Add Event"></input>
+            <input type="button" onClick={() => addEvent()} id="add" class="btn btn-info bg-primary" value="Add Event"></input>
           </div>
         </form>  
     </div>
