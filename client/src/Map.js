@@ -14,7 +14,7 @@ export class MapContainer extends Component {
       showingInfoWindow: false,
       activeMarker: {},
       selectedPlace: {},
-      locations: props.locations,
+      // locations: props.locations,
     };
   }
   onMarkerClick(props, marker, e) {
@@ -46,7 +46,7 @@ export class MapContainer extends Component {
            lat: 45.509871,
            lng:  -122.680712
          }}>
-         {this.state.locations.map((item, i) => <Marker 
+         {this.props.locations.map((item, i) => <Marker 
            name={item.title}
            title={item.title}
            position={{lat: item.location.lat, lng: item.location.lng}} 

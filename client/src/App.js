@@ -11,7 +11,7 @@ class App extends Component {
     locations: [  //todo: These are just a test data for debugging. Should be removed for production.
       { title: 'tmp FAB building', location: { lat: 45.509871, lng: -122.680712 } },
       { title: 'tmp Chopolios', location: { lat: 45.509677, lng:  -122.681626 } },
-      { title: '"Transgender Clients: Assessment and Planning for Gender-affirming Medical Procedures', location: { lat: 45.481716 , lng: -122.674043 } },
+      { title: 'Transgender Clients: Assessment and Planning for Gender-affirming Medical Procedures', location: { lat: 45.481716 , lng: -122.674043 } },
     ],
   };
 
@@ -37,14 +37,22 @@ class App extends Component {
     .then(jdat => {
       console.log(jdat);
       this.setState({ data: JSON.stringify(jdat)}); // Print to debug area.
+      let evLocations = []; // New array.
       jdat.forEach(item =>{
         console.log("Name: ", item.name);
         this.setState({ data: JSON.stringify(item.name)});
-        console.log("Location Coordinates: ", item.loc.coordinates)
+        console.log("Location Coordinates: ", item.loc.coordinates);
+        const evLoc = { // An event from DB.
+          title: JSON.stringify(item.name),
+          location: {
+            lat: item.loc.coordinates[1],
+            lng: item.loc.coordinates[0]
+          }
+        };
+        evLocations.push(evLoc); // Add to the array.
       })
-      // todo: Update marker on the map?
+      this.setState({locations: evLocations}); // Set the array as the new location.
     });
-    // todo: add catch() to handle error.
   }
 
   // Callback function when adding a new entry to DB.
@@ -93,7 +101,7 @@ class App extends Component {
             <Menu 
               cbGetData={() => this.callbackGetData()} 
               cbAddData={() => this.callbackAddData()} 
-              />
+            />  
           </div>
           <div className="box main col">
             <MapContainer locations={this.state.locations}/>
