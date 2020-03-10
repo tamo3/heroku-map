@@ -1,40 +1,9 @@
-import React, { Component, useState } from 'react';
-import './App.css';
+import React, { Component } from 'react';
 import MapContainer from './Map.js';
 import { Menu } from './Menu.js';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import { Button, Modal } from 'react-bootstrap';
+import './App.css';
 
 
-function Example() {
-  const [show, setShow] = useState(false);
-
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
-
-  return (
-    <>
-      <Button variant="primary" onClick={handleShow}>
-        Launch demo modal
-      </Button>
-
-      <Modal show={show} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>Modal heading</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Close
-          </Button>
-          <Button variant="primary" onClick={handleClose}>
-            Save Changes
-          </Button>
-        </Modal.Footer>
-      </Modal>
-    </>
-  );
-}
 
 class App extends Component {
   state = {
@@ -119,16 +88,15 @@ class App extends Component {
         <header className="App-header">
           <h1 className="App-title">PDX Event Map!</h1>
         </header>
-        <div className="container">
-          <div className="box left">
+        <div className="container row">
+          <div className="box left col-sm-4">
             <Menu 
               cbGetData={() => this.callbackGetData()} 
               cbAddData={() => this.callbackAddData()} 
               />
           </div>
-          <div className="box main">
-            <Example />          
-            <MapContainer locations={this.state.locations} />
+          <div className="box main col">
+            <MapContainer locations={this.state.locations}/>
           </div>
         </div>
         <div id="debug-div">(this section is for debugging)

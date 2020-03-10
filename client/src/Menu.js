@@ -1,43 +1,10 @@
 import React, { Component, useState } from 'react';
-import './App.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import Client from 'predicthq';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Button, Modal } from 'react-bootstrap';
+import Client from 'predicthq';
+import './App.css';
+import logo from './logo.svg';
 
-function Example() {
-  const [show, setShow] = useState(false);
-
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
-
-  return (
-    <>
-      <Button variant="primary" onClick={handleShow}>
-        Launch demo modal
-      </Button>
-
-      <Modal show={show} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>Modal heading</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Close
-          </Button>
-          <Button variant="primary" onClick={handleClose}>
-            Save Changes
-          </Button>
-        </Modal.Footer>
-      </Modal>
-    </>
-  );
-}
-
-
-
-var print = 1;
 
 // Client Secret : Wkuwi2B84jBH27rSfte0nAvOtI69HI7hCmVrouV4QIXm3tARXa_Sog
 // Access Token : TODGDOgZORwsYmZ-n_b4-on0JaWM2Vuqn8O2K-KU
@@ -50,17 +17,16 @@ const phqEvents = client.events;
 
 const logEventsToConsole = events => {
   for (const event of events) {
+    console.log(event);
+    console.log();
     // See https://developer.predicthq.com/resources/events/#fields for list of all event fields.
-    //console.log(event);
     
+    /*document.getElementById("json").innerHTML = JSON.stringify(event, undefined, 2);
+
     Object.keys(event).forEach(function(key){
       console.log(event[key]);
       document.getElementById("json").innerHTML = JSON.stringify(event[key], undefined, 2);
-    });
-
-    if (print === 0) {
-      document.getElementById("json").innerHTML = JSON.stringify(events, undefined, 2);
-    }
+    });*/
   }
 };
 
@@ -82,17 +48,24 @@ class Menu extends Component {
     cbAddData(); // Call callback function.
   }
 
+  togglePopup() {
+    this.setState({
+      showPopup: !this.state.showPopup
+    });
+  }
+ 
   render() {
     return (
     <div>
-      <div>
-        <button type="button" class="dash-button btn btn-primary mb-1" onClick={() => this.getData(this.props.cbGetData)} title="get data from DB">Debug Get Events</button>
-        <button type="button" class="dash-button btn btn-primary" onClick={() => this.addData(this.props.cbAddData)} title="add data to DB">Debug Add Event</button>   
+      <div >
+        <div className="row mb-1 "><button type="button" className="dash-button btn btn-block btn-primary" onClick={() => this.getData(this.props.cbGetData)} title="get data from DB">Debug Get Events</button></div>
+        <div className="row mb-1 "><button type="button" className="dash-button btn btn-block btn-primary" onClick={() => this.addData(this.props.cbAddData)} title="add data to DB">Debug Add Event</button>   </div>
+        <div className="row mb-1 "><About /></div>  
       </div>
       <br></br>
       <div>
-        <table class="table table-bg">
-          <thead class="thead-dark">
+        <table className="table table-bg">
+          <thead className="thead-dark">
             <tr>
               <th scope="col">#</th>
               <th scope="col">Event</th>
@@ -119,12 +92,87 @@ class Menu extends Component {
                 <td>Portland, OR</td>
                 <td>8AM</td>
               </tr>
+              <tr>
+                <th scope="row">4</th>
+                <td>Test Event</td>
+                <td>Portland, OR</td>
+                <td>8AM</td>
+              </tr>
+              <tr>
+                <th scope="row">5</th>
+                <td>Test Event</td>
+                <td>Portland, OR</td>
+                <td>8AM</td>
+              </tr>
               </tbody>
           </table>
         </div>
+        <form>
+          <div class="form-group">
+            <label className="event-name">Event Name</label>
+            <input type="name" class="form-control" id="event_name" aria-describedby="emailHelp" placeholder="Event Name"></input>
+          </div>
+          <div className="form-group">
+            <label for="event-location">Event Location</label>
+            <input type="location" class="form-control" id="event_location" placeholder="Event Location"></input>
+          </div>
+          <div class="form-group">
+            <label className="event-time">Event Time</label>
+            <input type="time" class="form-control" id="event_time" placeholder="Event Time"></input>
+          </div>
+          <div>
+            <input type="submit" class="btn btn-info bg-primary" value="Add Event"></input>
+          </div>
+        </form>  
     </div>
     )
   }
 }
+
+
+
+// React-Bootstrap, Modal: https://react-bootstrap.netlify.com/components/modal/#modals
+function About() {
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+  
+  return ( // Using the "Fragment Shortcut", '<>..</>' // See: https://reactjs.org/docs/fragments.html
+    <> 
+      <Button variant="primary" block onClick={handleShow} title="About"> 
+        About...
+      </Button>
+
+      <Modal show={show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>
+            <img src={logo} className="App-logo" alt="logo" />About...
+            </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <div className="about-container">
+            <div>
+              <b>Technologies:</b><br/>
+              MERN stack<br/>
+              2020 Winter Full Stack Web <a href="pdx.edu" target="_brank">@pdx.edu</a>
+            </div>
+            <div>
+              <b>Developed by:</b><br/>
+              Brandon<br/>
+              Mirko<br/>
+              <a href="https://tamo3.github.io/" rel="noopener noreferrer" target="_blank">Tamotsu</a><br/>
+            </div>
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="primary" onClick={handleClose}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </>
+  );
+}
+
 
 export { Menu };
