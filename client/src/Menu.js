@@ -160,7 +160,7 @@ function About() {
               <b>Developed by:</b><br/>
               Brandon<br/>
               Mirko<br/>
-              <a href="https://tamo3.github.io/" target="_blank">Tamotsu</a><br/>
+              <a href="https://tamo3.github.io/" rel="noopener noreferrer" target="_blank">Tamotsu</a><br/>
             </div>
           </div>
         </Modal.Body>
