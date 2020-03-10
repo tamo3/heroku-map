@@ -35,17 +35,32 @@ const withinParam = '10km@45.509871,-122.680712';
 
 // Event search using `within` parameter.
 // See https://developer.predicthq.com/resources/events/#parameters for all available search parameters.
-phqEvents.search({within: withinParam})
-  .then(logEventsToConsole)
-  .catch(err => console.error(err));
+// phqEvents.search({within: withinParam})
+//   .then(logEventsToConsole)
+//   .catch(err => console.error(err));
 
 class Menu extends Component {
-
+  constructor(props) {
+    super(props);
+    this.state = {
+      eventList: null, // Keep the latest event list from API.
+    };
+  }
   getData(cbGetData) {
     cbGetData(); // Call callback function.
   }
   addData(cbAddData) {
     cbAddData(); // Call callback function.
+  }
+  listEvents() {
+    phqEvents.search({within: withinParam})
+    .then((ev) => {
+      logEventsToConsole(ev);
+      console.log(ev.result.results.length);
+      console.log(`ID=${ev.result.results[0].id} Title=${ev.result.results[0].title} loc=${ev.result.results[0].location[1]},${ev.result.results[0].location[0]}`);
+      this.setState({eventList: ev.result.results}); // Assign the result array to eventList.
+    })
+    .catch(err => console.error(err));
   }
 
   togglePopup() {
@@ -55,11 +70,13 @@ class Menu extends Component {
   }
  
   render() {
+    const eventList = this.state.eventList || []; // To deal with emptyr array.
     return (
     <div>
       <div >
         <div className="row mb-1 "><button type="button" className="dash-button btn btn-block btn-primary" onClick={() => this.getData(this.props.cbGetData)} title="get data from DB">Debug Get Events</button></div>
-        <div className="row mb-1 "><button type="button" className="dash-button btn btn-block btn-primary" onClick={() => this.addData(this.props.cbAddData)} title="add data to DB">Debug Add Event</button>   </div>
+        <div className="row mb-1 "><button type="button" className="dash-button btn btn-block btn-primary" onClick={() => this.addData(this.props.cbAddData)} title="add data to DB">Debug Add Event</button></div>
+        <div className="row mb-1 "><button type="button" className="dash-button btn btn-block btn-primary" onClick={() => this.listEvents()} title="Access event API">Debug List Event</button></div>
         <div className="row mb-1 "><About /></div>  
       </div>
       <br></br>
@@ -74,36 +91,15 @@ class Menu extends Component {
             </tr>
             </thead>
             <tbody>
-              <tr>
-                <th scope="row">1</th>
-                <td>Test Event</td>
-                <td>Portland, OR</td>
-                <td>8AM</td>
-              </tr>
-              <tr>
-                <th scope="row">2</th>
-                <td>Test Event</td>
-                <td>Portland, OR</td>
-                <td>8AM</td>
-              </tr>
-              <tr>
-                <th scope="row">3</th>
-                <td>Test Event</td>
-                <td>Portland, OR</td>
-                <td>8AM</td>
-              </tr>
-              <tr>
-                <th scope="row">4</th>
-                <td>Test Event</td>
-                <td>Portland, OR</td>
-                <td>8AM</td>
-              </tr>
-              <tr>
-                <th scope="row">5</th>
-                <td>Test Event</td>
-                <td>Portland, OR</td>
-                <td>8AM</td>
-              </tr>
+              {eventList.map(x => {
+                return (
+                <tr>
+                  <th scope="row">1</th>
+                  <td>{x.title}</td>
+                  <td>Portland, OR</td>
+                  <td>8AM</td>
+                </tr>);})
+              }
               </tbody>
           </table>
         </div>
