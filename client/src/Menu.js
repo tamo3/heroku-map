@@ -97,10 +97,10 @@ class Menu extends Component {
     return (
     <div>
       <div >
-        <div className="row mb-1 "><button type="button" className="dash-button btn btn-block btn-primary" onClick={() => this.getData(this.props.cbGetData)} title="get data from DB">Debug Get Events</button></div>
-        <div className="row mb-1 "><button type="button" className="dash-button btn btn-block btn-primary" onClick={() => this.delMarker(this.props.cbDelMarker)} title="delete markers">Debug Clear Markers</button></div>
-        <div className="row mb-1 "><button type="button" className="dash-button btn btn-block btn-primary" onClick={() => this.addData(this.props.cbAddData)} title="add data to DB">Debug Add Event</button></div>
-        <div className="row mb-1 "><button type="button" className="dash-button btn btn-block btn-primary" onClick={() => this.listEvents()} title="Access event API">Debug List Event</button></div>
+        <div className="row mb-1 "><button type="button" className="dash-button btn btn-block btn-primary" onClick={() => this.getData(this.props.cbGetData)} title="get data from DB">Get Events</button></div>
+        <div className="row mb-1 "><button type="button" className="dash-button btn btn-block btn-primary" onClick={() => this.delMarker(this.props.cbDelMarker)} title="delete markers">Clear Markers</button></div>
+        <div className="row mb-1 "><button type="button" className="dash-button btn btn-block btn-primary" onClick={() => this.addData(this.props.cbAddData)} title="add data to DB">Add Event</button></div>
+        <div className="row mb-1 "><button type="button" className="dash-button btn btn-block btn-primary" onClick={() => this.listEvents()} title="Access event API">List Event</button></div>
         <div className="row mb-1 "><About /></div>  
       </div>
       <br></br>

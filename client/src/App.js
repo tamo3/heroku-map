@@ -97,7 +97,7 @@ class App extends Component {
       return (
       <div className="App">
         <header className="App-header">
-          <h1 className="App-title">PDX Event Map!</h1>
+          <h1 className="App-title">PDX Event Map</h1>
         </header>
         <div className="container row">
           <div className="box left col-sm-4">
