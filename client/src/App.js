@@ -111,9 +111,6 @@ class App extends Component {
             <MapContainer locations={this.state.locations}/>
           </div>
         </div>
-        <div id="debug-div">(this section is for debugging)
-          <p>{this.state.data}</p>
-        </div>
       </div>
     );
   }
