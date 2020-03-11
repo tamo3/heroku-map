@@ -35,37 +35,51 @@ const withinParam = '10km@45.509871,-122.680712';
 
 // Event search using `within` parameter.
 // See https://developer.predicthq.com/resources/events/#parameters for all available search parameters.
-phqEvents.search({within: withinParam})
-  .then(logEventsToConsole)
-  .catch(err => console.error(err));
+// phqEvents.search({within: withinParam})
+//   .then(logEventsToConsole)
+//   .catch(err => console.error(err));
+function addEvent() {
+  var table = document.getElementById("events_table");
+  
+  var row= document.createElement("tr");
+  console.log(row);
+  var event_title = document.createElement("td");
+  var event_location = document.createElement("td");
+  var event_time = document.createElement("td");
+  
+  event_title.innerHTML = document.getElementById("event_title").value;
+  event_location.innerHTML  = document.getElementById("event_location").value;
+  event_time.innerHTML  = document.getElementById("event_time").value;
 
- function addEvent() {
-    var table = document.getElementById("events_table");
-    
-    var row= document.createElement("tr");
-    console.log(row);
-    var event_title = document.createElement("td");
-    var event_location = document.createElement("td");
-    var event_time = document.createElement("td");
-    
-    event_title.innerHTML = document.getElementById("event_title").value;
-    event_location.innerHTML  = document.getElementById("event_location").value;
-    event_time.innerHTML  = document.getElementById("event_time").value;
-  
-    row.appendChild(event_title);
-    row.appendChild(event_location);
-    row.appendChild(event_time);
-  
-    table.children[0].appendChild(row);
-  }
+  row.appendChild(event_title);
+  row.appendChild(event_location);
+  row.appendChild(event_time);
+
+  table.children[0].appendChild(row);
+}
 
 class Menu extends Component {
-
+  constructor(props) {
+    super(props);
+    this.state = {
+      eventList: null, // Keep the latest event list from API.
+    };
+  }
   getData(cbGetData) {
     cbGetData(); // Call callback function.
   }
   addData(cbAddData) {
     cbAddData(); // Call callback function.
+  }
+  listEvents() {
+    phqEvents.search({within: withinParam})
+    .then((ev) => {
+      logEventsToConsole(ev);
+      console.log(ev.result.results.length);
+      console.log(`ID=${ev.result.results[0].id} Title=${ev.result.results[0].title} loc=${ev.result.results[0].location[1]},${ev.result.results[0].location[0]}`);
+      this.setState({eventList: ev.result.results}); // Assign the result array to eventList.
+    })
+    .catch(err => console.error(err));
   }
 
   togglePopup() {
@@ -73,13 +87,15 @@ class Menu extends Component {
       showPopup: !this.state.showPopup
     });
   }
-
+ 
   render() {
+    const eventList = this.state.eventList || []; // To deal with emptyr array.
     return (
     <div>
       <div >
         <div className="row mb-1 "><button type="button" className="dash-button btn btn-block btn-primary" onClick={() => this.getData(this.props.cbGetData)} title="get data from DB">Debug Get Events</button></div>
-        <div className="row mb-1 "><button type="button" className="dash-button btn btn-block btn-primary" onClick={() => this.addData(this.props.cbAddData)} title="add data to DB">Debug Add Event</button>   </div>
+        <div className="row mb-1 "><button type="button" className="dash-button btn btn-block btn-primary" onClick={() => this.addData(this.props.cbAddData)} title="add data to DB">Debug Add Event</button></div>
+        <div className="row mb-1 "><button type="button" className="dash-button btn btn-block btn-primary" onClick={() => this.listEvents()} title="Access event API">Debug List Event</button></div>
         <div className="row mb-1 "><About /></div>  
       </div>
       <br></br>
@@ -87,11 +103,23 @@ class Menu extends Component {
         <table className="table table-bg" id="events_table">
           <thead className="thead-dark">
             <tr>
+              <th scope="col">#</th>
               <th scope="col">Event</th>
               <th scope="col">Location</th>
               <th scope="col">Time</th>
             </tr>
             </thead>
+            <tbody>
+              {eventList.map((x,i) => {
+                return (
+                <tr>
+                  <th scope="row">{i+1}</th>
+                  <td>{x.title}</td>
+                  <td>Portland, OR</td>
+                  <td>8AM</td>
+                </tr>);})
+              }
+              </tbody>
           </table>
         </div>
         <form>
