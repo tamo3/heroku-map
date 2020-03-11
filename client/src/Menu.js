@@ -66,10 +66,13 @@ class Menu extends Component {
     };
   }
   getData(cbGetData) {
-    cbGetData(); // Call callback function.
+    cbGetData(); // Call App.js/callbackGetData().
+  }
+  delMarker(cbDelMarker) {
+    cbDelMarker(); // Call App.js/callbackDeleteMarkers().
   }
   addData(cbAddData) {
-    cbAddData(); // Call callback function.
+    cbAddData(); // Call App.js/callbackAddData().
   }
   listEvents() {
     phqEvents.search({within: withinParam})
@@ -81,6 +84,7 @@ class Menu extends Component {
     })
     .catch(err => console.error(err));
   }
+
 
   togglePopup() {
     this.setState({
@@ -94,6 +98,7 @@ class Menu extends Component {
     <div>
       <div >
         <div className="row mb-1 "><button type="button" className="dash-button btn btn-block btn-primary" onClick={() => this.getData(this.props.cbGetData)} title="get data from DB">Debug Get Events</button></div>
+        <div className="row mb-1 "><button type="button" className="dash-button btn btn-block btn-primary" onClick={() => this.delMarker(this.props.cbDelMarker)} title="delete markers">Debug Clear Markers</button></div>
         <div className="row mb-1 "><button type="button" className="dash-button btn btn-block btn-primary" onClick={() => this.addData(this.props.cbAddData)} title="add data to DB">Debug Add Event</button></div>
         <div className="row mb-1 "><button type="button" className="dash-button btn btn-block btn-primary" onClick={() => this.listEvents()} title="Access event API">Debug List Event</button></div>
         <div className="row mb-1 "><About /></div>  
@@ -173,9 +178,8 @@ function About() {
             </div>
             <div>
               <b>Developed by:</b><br/>
-              Brandon<br/>
               Mirko<br/>
-              <a href="https://tamo3.github.io/" rel="noopener noreferrer" target="_blank">Tamotsu</a><br/>
+              <a href="https://tamo3.github.io/3-music.html" rel="noopener noreferrer" target="_blank">Tamotsu</a><br/>
             </div>
           </div>
         </Modal.Body>
