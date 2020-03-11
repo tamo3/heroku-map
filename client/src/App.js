@@ -55,6 +55,10 @@ class App extends Component {
     });
   }
 
+  callbackDeleteMarkers() {
+    this.setState({locations: []}); 
+  }
+
   // Callback function when adding a new entry to DB.
   callbackAddData() {
     this.setState({ data: `todo: POST the new data to server.`});
@@ -71,6 +75,7 @@ class App extends Component {
             <Menu 
               cbGetData={() => this.callbackGetData()} 
               cbAddData={() => this.callbackAddData()} 
+              cbDelMarker={() => this.callbackDeleteMarkers()}
             />  
           </div>
           <div className="box main col">
