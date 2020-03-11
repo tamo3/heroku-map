@@ -6,6 +6,11 @@ import './App.css';
 
 
 class App extends Component {
+  constructor() {
+    super();
+    this.counter = 0;
+  }
+
   state = {
     data: 'test',
     locations: [  //todo: These are just a test data for debugging. Should be removed for production.
@@ -57,6 +62,30 @@ class App extends Component {
 
   // Callback function when adding a new entry to DB.
   callbackAddData() {
+    const jdat = {
+      start: '',
+      end: '',
+      name: `tmp event${this.counter++}`,
+      loc: {
+        type: "Point",
+        coordinates: [-122.697687 + this.counter*0.01, 45.526974 ]  // [lng, lat] -- different from Google Map!  Need to swap!
+      },
+      web: '',
+      desc: ''
+    };
+    // Send POST message.
+    fetch('/api', {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json'
+      },      
+      body: JSON.stringify(jdat)
+    }).then(resp => {
+      return resp.text();
+    }).then(dat => {
+      console.log(`Reauest complete, resp: ${dat}`)
+    })
+    // todo: add catch() to handle error.
     this.setState({ data: `todo: POST the new data to server.`});
   }
 

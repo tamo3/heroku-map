@@ -23,6 +23,7 @@ if(process.env.NODE_ENV === 'production') {
 else { // TT: not sure if this is needed.
   app.use(express.static(path.join(__dirname, 'client/public')));  
 }
+app.use(express.json());
 
 // console.log that your server is up and running
 app.listen(port, () => console.log(`Listening on port ${port}`));
@@ -50,6 +51,13 @@ app.get('/api', (req, res) => {
   })
 });
 
-// todo: Create/POST (for adding new data), DELETE (for deleting existing entry).
+app.post('/api', (req, res) => {
+  const list = req.body;
+  console.log(list);
+  myDb.Event.insertMany(list)    // Insert to the DB.
+  res.type('text/plain')
+  res.send('POST request completed');
+})
 
+// todo: create DELETE (for deleting existing entry).
 
