@@ -179,7 +179,7 @@ function About() {
             <div>
               <b>Developed by:</b><br/>
               Mirko<br/>
-              <a href="https://tamo3.github.io/" rel="noopener noreferrer" target="_blank">Tamotsu</a><br/>
+              <a href="https://tamo3.github.io/3-music.html" rel="noopener noreferrer" target="_blank">Tamotsu</a><br/>
             </div>
           </div>
         </Modal.Body>
