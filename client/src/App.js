@@ -60,29 +60,19 @@ class App extends Component {
     });
   }
 
+  // Delete markers on Map.
   callbackDeleteMarkers() {
     this.setState({locations: []}); 
   }
 
-  // Callback function when adding a new entry to DB.
-  callbackAddData() {
-    const jdat = {
-      start: '',
-      end: '',
-      name: `tmp event${this.counter++}`,
-      loc: {
-        type: "Point",
-        coordinates: [-122.697687 + this.counter*0.01, 45.526974 ]  // [lng, lat] -- different from Google Map!  Need to swap!
-      },
-      web: '',
-      desc: ''
-    };
+  // Add a single event to DB.
+  addSingleEventToDb(jdat) {
     // Send POST message.
     fetch('/api', {
       method: "POST",
       headers: {
         'Content-Type': 'application/json'
-      },      
+      },
       body: JSON.stringify(jdat)
     }).then(resp => {
       return resp.text();
@@ -90,9 +80,15 @@ class App extends Component {
       console.log(`Reauest complete, resp: ${dat}`)
     })
     // todo: add catch() to handle error.
-    this.setState({ data: `todo: POST the new data to server.`});
+    this.setState({ data: `todo: POST the new data to server.` });
   }
 
+  // Callback function when adding a new entry to DB.
+  callbackAddData(evArray) {
+    for (let i = 0; i < evArray.length; i++)
+      this.addSingleEventToDb(evArray[i]);
+  }
+  
   render() {
       return (
       <div className="App">
@@ -103,7 +99,7 @@ class App extends Component {
           <div className="box left col-sm-4">
             <Menu 
               cbGetData={() => this.callbackGetData()} 
-              cbAddData={() => this.callbackAddData()} 
+              cbAddData={(x) => this.callbackAddData(x)} 
               cbDelMarker={() => this.callbackDeleteMarkers()}
             />  
           </div>
