@@ -58,29 +58,25 @@ class Menu extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      eventList: null,          // Keep the latest event list from API.
-      numChecked: 0,
+      eventList: null,      // Keep the latest event list from API.
+      numChecked: 0,        // Keep track of the number of checked checkboxes.
     };
   }
   eventCheckboxStatus = [];  // Keep track of checkbox status, i.e. eventCheckboxStatus[2]==1, then 3rd event is checked.
-  checkboxCheked(i) {
+
+  checkboxCheked(i) { // If [i]th checkbox is checked or not.
     if (i < this.eventCheckboxStatus.length && this.eventCheckboxStatus[i])
       return true;
     return false;
   }
-  getData(cbGetData) {
-    cbGetData(); // Call App.js/callbackGetData().
-  }
-  delMarker(cbDelMarker) {
-    cbDelMarker(); // Call App.js/callbackDeleteMarkers().
-  }
+
   addData(cbAddData) {
     const eventList = this.state.eventList || []; // To deal with empty array.
     if (eventList.length > 0) {
       const list = eventList.filter((x, i) => this.checkboxCheked(i)); // Filter only checked events.
       if (list.length > 0) {
         const evArray = list.map((x, i) => { // Create event array.
-          const item = {
+          const item = { // JSON object for sending to DB.
             start: x.start,
             end: x.end,
             name: x.title,
@@ -97,6 +93,7 @@ class Menu extends Component {
       }
     }
   }
+
   listEvents() {
     this.eventCheckboxStatus = []; // Clear the chekbox status array.
     phqEvents.search({within: withinParam})
@@ -121,8 +118,19 @@ class Menu extends Component {
     const cbx = event.currentTarget;
     // console.log(cbx.checked); console.log(cbx.value); 
     this.eventCheckboxStatus[cbx.value] = cbx.checked;
-    const n = this.eventCheckboxStatus.reduce((acc,c) => acc + c ? 1 : 0, 0); // Count checked items.
-    this.setState({numChecked: n});
+    // Count checked items // https://stackoverflow.com/questions/49380306/javascript-array-counting-sparse-indexed-element
+    const n = this.eventCheckboxStatus.reduce((acc,c) => acc + c ? 1 : 0, 0); 
+    this.setState({numChecked: n}); // Update number of checked checkboxes.
+
+    // Set/Clear Marker.
+    const x = this.state.eventList[cbx.value];
+    const evLoc = {
+      title: x.title,
+      location: {
+        lat: x.location[1], lng: x.location[0],
+      },
+    };
+    this.props.cbAddDel(evLoc, cbx.checked); // Call App.js/callbackAddDelMarker().
   }
  
   render() {
@@ -130,10 +138,11 @@ class Menu extends Component {
     return (
     <div>
         <div >
-          <div className="row mb-1 "><button type="button" className="dash-button btn btn-block btn-primary" onClick={() => this.getData(this.props.cbGetData)} title="Get events from DB">My Events</button></div>
-          {/* <div className="row mb-1 "><button type="button" className="dash-button btn btn-block btn-primary" onClick={() => this.addData(this.props.cbAddData)} title="add data to DB">Debug Add Event</button></div> */}
           <div className="row mb-1 "><button type="button" className="dash-button btn btn-block btn-primary" onClick={() => this.listEvents()} title="Access current events from API">Find Events</button></div>
-          <div className="row mb-1 "><button type="button" className="dash-button btn btn-block btn-primary" onClick={() => this.delMarker(this.props.cbDelMarker)} title="Clear markers from map">Clear Markers</button></div>
+          {/* Call App.js/callbackGetData() */}
+          <div className="row mb-1 "><button type="button" className="dash-button btn btn-block btn-primary" onClick={() => this.props.cbGetData()} title="Get events from DB">My List</button></div>
+          {/*  Call App.js/callbackDeleteMarkers() */}
+          <div className="row mb-1 "><button type="button" className="dash-button btn btn-block btn-primary" onClick={() => this.props.cbDelMarker()} title="Clear markers from map">Clear Markers</button></div>
           <div className="row mb-1 "><About /></div>
         </div>
         <br></br>
@@ -172,7 +181,7 @@ class Menu extends Component {
             <input type="time" class="form-control" name="event_time" id="event_time" placeholder="Event Time"></input>
           </div>
           <div>
-            <input type="button" disabled={this.state.numChecked===0} onClick={() => this.addData(this.props.cbAddData)} id="add" class="btn btn-info bg-primary" value="Add Event"></input>
+            <input type="button" disabled={this.state.numChecked===0} onClick={() => this.addData(this.props.cbAddData)} id="add" class="btn btn-info bg-primary" value="Add to My List"></input>
             {/* <input type="button" onClick={() => addEvent()} id="add" class="btn btn-info bg-primary" value="Add Event"></input> */}
           </div>
         </form>  

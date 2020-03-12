@@ -34,7 +34,7 @@ class App extends Component {
 
   // Callback function when getting data from DB. 
   callbackGetData() {
-    fetch('/api')
+    fetch('/api') // Get event data from DB.
     .then(resp => {
       console.log(resp);
       return resp.json();
@@ -60,7 +60,29 @@ class App extends Component {
     });
   }
 
-  // Delete markers on Map.
+  // Compare 2 events and return true if they are the same.
+  equals(a, b) {
+    // Some what deep comparison. NOTE: a===b didn't work.
+    const jc = JSON.stringify(a) === JSON.stringify(b);
+    return jc;
+  }
+
+  // Add or delete a single Marker.
+  callbackAddDelMarker(evItem, add) {
+    const match = this.state.locations.filter(x => this.equals(x, evItem));
+    // const match = this.state.locations.filter(x => x === evItem);
+    if (add && match.length === 0) { // Add mode && the event hasn't been added.
+      let evLocations = this.state.locations.slice(0); // Copy locations.
+      evLocations.push(evItem);
+      this.setState({locations: evLocations});
+    }
+    else if (!add && match.length > 0) { // Del mode && the event is in the list.
+      const evLocations = this.state.locations.filter((x) => !this.equals(x, evItem));
+      this.setState({locations: evLocations});
+    }
+  }
+
+  // Delete all markers on Map.
   callbackDeleteMarkers() {
     this.setState({locations: []}); 
   }
@@ -100,6 +122,7 @@ class App extends Component {
             <Menu 
               cbGetData={() => this.callbackGetData()} 
               cbAddData={(x) => this.callbackAddData(x)} 
+              cbAddDel={(x,ad) => this.callbackAddDelMarker(x,ad)}
               cbDelMarker={() => this.callbackDeleteMarkers()}
             />  
           </div>
