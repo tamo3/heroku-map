@@ -94,6 +94,7 @@ class Menu extends Component {
     }
   }
 
+  // Find events through API.
   listEvents() {
     this.eventCheckboxStatus = []; // Clear the chekbox status array.
     phqEvents.search({within: withinParam})
@@ -106,11 +107,12 @@ class Menu extends Component {
     .catch(err => console.error(err));
   }
 
-  // For About dialog.
-  togglePopup() {
-    this.setState({
-      showPopup: !this.state.showPopup
-    });
+  clearMarkers(cb) {
+    this.setState({numChecked: 0});
+    const tbl = document.getElementsByClassName("event-list");
+    for (let i = 0; i < tbl[0].rows.length; i++)
+      tbl[0].rows[i].cells[0].childNodes[0].children[0].checked = false;
+    cb(); // Call App.js/callbackDeleteMarkers().
   }
 
   // How to pass argument to onClick: https://stackoverflow.com/questions/50330124/how-to-pass-checkbox-state-to-onclick-function-in-react
@@ -141,8 +143,7 @@ class Menu extends Component {
           <div className="row mb-1 "><button type="button" className="dash-button btn btn-block btn-primary" onClick={() => this.listEvents()} title="Access current events from API">Find Events</button></div>
           {/* Call App.js/callbackGetData() */}
           <div className="row mb-1 "><button type="button" className="dash-button btn btn-block btn-primary" onClick={() => this.props.cbGetData()} title="Get events from DB">My List</button></div>
-          {/*  Call App.js/callbackDeleteMarkers() */}
-          <div className="row mb-1 "><button type="button" className="dash-button btn btn-block btn-primary" onClick={() => this.props.cbDelMarker()} title="Clear markers from map">Clear Markers</button></div>
+          <div className="row mb-1 "><button type="button" className="dash-button btn btn-block btn-primary" onClick={() => this.clearMarkers(this.props.cbDelMarker)} title="Clear markers from map">Clear Markers</button></div>
           <div className="row mb-1 "><About /></div>
         </div>
         <br></br>
@@ -188,8 +189,16 @@ class Menu extends Component {
     </div>
     )
   }
-}
 
+
+  // For About dialog.
+  togglePopup() {
+    this.setState({
+      showPopup: !this.state.showPopup
+    });
+  }
+
+}
 
 
 // React-Bootstrap, Modal: https://react-bootstrap.netlify.com/components/modal/#modals
