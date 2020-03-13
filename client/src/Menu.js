@@ -270,7 +270,7 @@ function About() {
             </div>
             <div>
               <b>Developed by:</b><br/>
-              Mirko<br/>
+              <a href="https://www.linkedin.com/in/mirko-draganic-98822313b/" rel="noopener noreferrer" target="_blank">Mirko</a><br/>
               <a href="https://tamo3.github.io/3-music.html" rel="noopener noreferrer" target="_blank">Tamotsu</a><br/>
             </div>
           </div>
