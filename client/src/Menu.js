@@ -133,6 +133,7 @@ class Menu extends Component {
 
   // Get my events from DB then display them to event pane.
   myList() {
+    this.clearMarkers();
     this.isMyList = true;
     this.eventCheckboxStatus = []; // Clear the chekbox status array.
     this.props.cbGetData();  // Call App.js/callbackGetData().

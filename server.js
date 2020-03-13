@@ -59,5 +59,13 @@ app.post('/api', (req, res) => {
   res.send('POST request completed');
 })
 
-// todo: create DELETE (for deleting existing entry).
+app.delete('/api', (req, res) => {
+  const list = req.body;
+  myDb.Event.deleteMany(list).then(next => {   // Delete from the DB.
+    console.log(next);
+  })  
+  res.type('text/plain')
+  res.send('DELETE request completed');
+})
+
 
