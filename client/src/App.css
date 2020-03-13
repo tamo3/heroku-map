@@ -97,3 +97,8 @@ html,body {
 .event-list {
   font-size: 11px;
 }
+
+.form-group * {
+  font-size: 11px;
+  pointer-events: none; /* disable form inputs */
+}
