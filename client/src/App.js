@@ -104,24 +104,35 @@ class App extends Component {
     // todo: add catch() to handle error.
     this.setState({ data: `todo: POST the new data to server.` });
   }
+  // Delete a single event to DB.
+  delSingleEventToDb(jdat) {
+    console.log(`todo: delete from DB: ${jdat}`);
+  }
 
-  // Callback function when adding a new entry to DB.
+  // Callback function to add entries to DB.
   callbackAddData(evArray) {
     for (let i = 0; i < evArray.length; i++)
       this.addSingleEventToDb(evArray[i]);
+  }
+  // Callback function to delete entries from DB.
+  callbackDelData(evArray) {
+    for (let i = 0; i < evArray.length; i++)
+      this.delSingleEventToDb(evArray[i]);
   }
   
   render() {
       return (
       <div className="App">
         <header className="App-header">
-          <h1 className="App-title">PDX Event Map</h1>
+          <h1 className="App-title">PDX Event Map!</h1>
         </header>
         <div className="container row">
           <div className="box left col-sm-4">
-            <Menu 
+            <Menu  
+              locations={this.state.locations}
               cbGetData={() => this.callbackGetData()} 
               cbAddData={(x) => this.callbackAddData(x)} 
+              cbDelData={(x) => this.callbackDelData(x)}
               cbAddDel={(x,ad) => this.callbackAddDelMarker(x,ad)}
               cbDelMarker={() => this.callbackDeleteMarkers()}
             />  
