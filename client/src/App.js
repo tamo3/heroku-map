@@ -34,7 +34,7 @@ class App extends Component {
 
   // Callback function when getting data from DB. 
   callbackGetData() {
-    fetch('/api')
+    fetch('/api') // Get event data from DB.
     .then(resp => {
       console.log(resp);
       return resp.json();
@@ -60,29 +60,41 @@ class App extends Component {
     });
   }
 
+  // Compare 2 events and return true if they are the same.
+  equals(a, b) {
+    // Some what deep comparison. NOTE: a===b didn't work.
+    const jc = JSON.stringify(a) === JSON.stringify(b);
+    return jc;
+  }
+
+  // Add or delete a single Marker.
+  callbackAddDelMarker(evItem, add) {
+    const match = this.state.locations.filter(x => this.equals(x, evItem));
+    // const match = this.state.locations.filter(x => x === evItem);
+    if (add && match.length === 0) { // Add mode && the event hasn't been added.
+      let evLocations = this.state.locations.slice(0); // Copy locations.
+      evLocations.push(evItem);
+      this.setState({locations: evLocations});
+    }
+    else if (!add && match.length > 0) { // Del mode && the event is in the list.
+      const evLocations = this.state.locations.filter((x) => !this.equals(x, evItem));
+      this.setState({locations: evLocations});
+    }
+  }
+
+  // Delete all markers on Map.
   callbackDeleteMarkers() {
     this.setState({locations: []}); 
   }
 
-  // Callback function when adding a new entry to DB.
-  callbackAddData() {
-    const jdat = {
-      start: '',
-      end: '',
-      name: `tmp event${this.counter++}`,
-      loc: {
-        type: "Point",
-        coordinates: [-122.697687 + this.counter*0.01, 45.526974 ]  // [lng, lat] -- different from Google Map!  Need to swap!
-      },
-      web: '',
-      desc: ''
-    };
+  // Add a single event to DB.
+  addSingleEventToDb(jdat) {
     // Send POST message.
     fetch('/api', {
       method: "POST",
       headers: {
         'Content-Type': 'application/json'
-      },      
+      },
       body: JSON.stringify(jdat)
     }).then(resp => {
       return resp.text();
@@ -90,9 +102,15 @@ class App extends Component {
       console.log(`Reauest complete, resp: ${dat}`)
     })
     // todo: add catch() to handle error.
-    this.setState({ data: `todo: POST the new data to server.`});
+    this.setState({ data: `todo: POST the new data to server.` });
   }
 
+  // Callback function when adding a new entry to DB.
+  callbackAddData(evArray) {
+    for (let i = 0; i < evArray.length; i++)
+      this.addSingleEventToDb(evArray[i]);
+  }
+  
   render() {
       return (
       <div className="App">
@@ -103,7 +121,8 @@ class App extends Component {
           <div className="box left col-sm-4">
             <Menu 
               cbGetData={() => this.callbackGetData()} 
-              cbAddData={() => this.callbackAddData()} 
+              cbAddData={(x) => this.callbackAddData(x)} 
+              cbAddDel={(x,ad) => this.callbackAddDelMarker(x,ad)}
               cbDelMarker={() => this.callbackDeleteMarkers()}
             />  
           </div>

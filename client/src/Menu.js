@@ -38,43 +38,65 @@ const withinParam = '10km@45.509871,-122.680712';
 // phqEvents.search({within: withinParam})
 //   .then(logEventsToConsole)
 //   .catch(err => console.error(err));
-function addEvent() {
-  var table = document.getElementById("events_table");
-  
-  var row= document.createElement("tr");
-  console.log(row);
-  var event_title = document.createElement("td");
-  var event_location = document.createElement("td");
-  var event_time = document.createElement("td");
-  
-  event_title.innerHTML = document.getElementById("event_title").value;
-  event_location.innerHTML  = document.getElementById("event_location").value;
-  event_time.innerHTML  = document.getElementById("event_time").value;
-
-  row.appendChild(event_title);
-  row.appendChild(event_location);
-  row.appendChild(event_time);
-
-  table.children[0].appendChild(row);
-}
+// function addEvent() {
+//   var table = document.getElementById("events_table");
+//   var row= document.createElement("tr");
+//   console.log(row);
+//   var event_title = document.createElement("td");
+//   var event_location = document.createElement("td");
+//   var event_time = document.createElement("td");
+//   event_title.innerHTML = document.getElementById("event_title").value;
+//   event_location.innerHTML  = document.getElementById("event_location").value;
+//   event_time.innerHTML  = document.getElementById("event_time").value;
+//   row.appendChild(event_title);
+//   row.appendChild(event_location);
+//   row.appendChild(event_time);
+//   table.children[0].appendChild(row);
+// }
 
 class Menu extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      eventList: null, // Keep the latest event list from API.
+      eventList: null,      // Keep the latest event list from API.
+      numChecked: 0,        // Keep track of the number of checked checkboxes.
     };
   }
-  getData(cbGetData) {
-    cbGetData(); // Call App.js/callbackGetData().
+  eventCheckboxStatus = [];  // Keep track of checkbox status, i.e. eventCheckboxStatus[2]==1, then 3rd event is checked.
+
+  checkboxCheked(i) { // If [i]th checkbox is checked or not.
+    if (i < this.eventCheckboxStatus.length && this.eventCheckboxStatus[i])
+      return true;
+    return false;
   }
-  delMarker(cbDelMarker) {
-    cbDelMarker(); // Call App.js/callbackDeleteMarkers().
-  }
+
   addData(cbAddData) {
-    cbAddData(); // Call App.js/callbackAddData().
+    const eventList = this.state.eventList || []; // To deal with empty array.
+    if (eventList.length > 0) {
+      const list = eventList.filter((x, i) => this.checkboxCheked(i)); // Filter only checked events.
+      if (list.length > 0) {
+        const evArray = list.map((x, i) => { // Create event array.
+          const item = { // JSON object for sending to DB.
+            start: x.start,
+            end: x.end,
+            name: x.title,
+            loc: {
+              type: "Point",
+              coordinates: [x.location[0], x.location[1]]  // [lng, lat] -- different from Google Map!  Need to swap!
+            },
+            web: '',
+            desc: x.category,
+          };
+          return item;
+        });
+        cbAddData(evArray); // Call App.js/callbackAddData().
+      }
+    }
   }
+
+  // Find events through API.
   listEvents() {
+    this.eventCheckboxStatus = []; // Clear the chekbox status array.
     phqEvents.search({within: withinParam})
     .then((ev) => {
       logEventsToConsole(ev);
@@ -85,17 +107,39 @@ class Menu extends Component {
     .catch(err => console.error(err));
   }
 
+  clearMarkers(cb) {
+    this.setState({numChecked: 0});
+    const tbl = document.getElementsByClassName("event-list");
+    for (let i = 0; i < tbl[0].rows.length; i++)
+      tbl[0].rows[i].cells[0].childNodes[0].children[0].checked = false;
+    cb(); // Call App.js/callbackDeleteMarkers().
+  }
 
-  togglePopup() {
-    this.setState({
-      showPopup: !this.state.showPopup
-    });
+  // How to pass argument to onClick: https://stackoverflow.com/questions/50330124/how-to-pass-checkbox-state-to-onclick-function-in-react
+  cbxClicked(event) { // Updated checkbox status array.
+    const cbx = event.currentTarget;
+    // console.log(cbx.checked); console.log(cbx.value); 
+    this.eventCheckboxStatus[cbx.value] = cbx.checked;
+    // Count checked items // https://stackoverflow.com/questions/49380306/javascript-array-counting-sparse-indexed-element
+    const n = this.eventCheckboxStatus.reduce((acc,c) => acc + c ? 1 : 0, 0); 
+    this.setState({numChecked: n}); // Update number of checked checkboxes.
+
+    // Set/Clear Marker.
+    const x = this.state.eventList[cbx.value];
+    const evLoc = {
+      title: x.title,
+      location: {
+        lat: x.location[1], lng: x.location[0],
+      },
+    };
+    this.props.cbAddDel(evLoc, cbx.checked); // Call App.js/callbackAddDelMarker().
   }
  
   render() {
     const eventList = this.state.eventList || []; // To deal with emptyr array.
     return (
     <div>
+<<<<<<< HEAD
       <div >
         <div className="row mb-1 "><button type="button" className="dash-button btn btn-block btn-primary" onClick={() => this.getData(this.props.cbGetData)} title="get data from DB">Get Events</button></div>
         <div className="row mb-1 "><button type="button" className="dash-button btn btn-block btn-primary" onClick={() => this.delMarker(this.props.cbDelMarker)} title="delete markers">Clear Markers</button></div>
@@ -113,18 +157,35 @@ class Menu extends Component {
               <th scope="col">Location</th>
               <th scope="col">Time</th>
             </tr>
+=======
+        <div >
+          <div className="row mb-1 "><button type="button" className="dash-button btn btn-block btn-primary" onClick={() => this.listEvents()} title="Access current events from API">Find Events</button></div>
+          {/* Call App.js/callbackGetData() */}
+          <div className="row mb-1 "><button type="button" className="dash-button btn btn-block btn-primary" onClick={() => this.props.cbGetData()} title="Get events from DB">My List</button></div>
+          <div className="row mb-1 "><button type="button" className="dash-button btn btn-block btn-primary" onClick={() => this.clearMarkers(this.props.cbDelMarker)} title="Clear markers from map">Clear Markers</button></div>
+          <div className="row mb-1 "><About /></div>
+        </div>
+        <br></br>
+        <div>
+          <table className="table table-bg" id="events_table">
+            <thead className="thead-dark">
+              <tr>
+                <th>Event</th>
+                <th>Location</th>
+                <th>Time</th>
+              </tr>
+>>>>>>> 02d072e48befcd6fff6764ffdd9154086809a9fd
             </thead>
-            <tbody>
+            <tbody className="event-list">
               {eventList.map((x,i) => {
                 return (
                 <tr>
-                  <th scope="row">{i+1}</th>
-                  <td>{x.title}</td>
+                  <td><label><input type="checkbox" value={i} onClick={(event)=>this.cbxClicked(event)}></input>{x.title}</label></td>
                   <td>Portland, OR</td>
                   <td>8AM</td>
                 </tr>);})
               }
-              </tbody>
+            </tbody>
           </table>
         </div>
         <form>
@@ -141,14 +202,23 @@ class Menu extends Component {
             <input type="time" class="form-control" name="event_time" id="event_time" placeholder="Event Time"></input>
           </div>
           <div>
-            <input type="button" onClick={() => addEvent()} id="add" class="btn btn-info bg-primary" value="Add Event"></input>
+            <input type="button" disabled={this.state.numChecked===0} onClick={() => this.addData(this.props.cbAddData)} id="add" class="btn btn-info bg-primary" value="Add to My List"></input>
+            {/* <input type="button" onClick={() => addEvent()} id="add" class="btn btn-info bg-primary" value="Add Event"></input> */}
           </div>
         </form>  
     </div>
     )
   }
-}
 
+
+  // For About dialog.
+  togglePopup() {
+    this.setState({
+      showPopup: !this.state.showPopup
+    });
+  }
+
+}
 
 
 // React-Bootstrap, Modal: https://react-bootstrap.netlify.com/components/modal/#modals
