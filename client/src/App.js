@@ -97,14 +97,28 @@ class App extends Component {
     }).then(resp => {
       return resp.text();
     }).then(dat => {
-      console.log(`Reauest complete, resp: ${dat}`)
-    })
-    // todo: add catch() to handle error.
-    this.setState({ data: `todo: POST the new data to server.` });
+      console.log(`POST Request complete, resp: ${dat}`)
+    }).catch(error => console.log(error));
   }
-  // Delete a single event to DB.
-  delSingleEventToDb(jdat) {
-    console.log(`todo: delete from DB: ${jdat}`);
+
+  // Delete a single event from DB.
+  delSingleEventFromDb(jdat) {
+    const item = {
+      name: jdat.name.replace(/(^"|"$)/g, ''),
+      // loc: jdat.loc, // somehow using location didn't work.
+    };
+    // Send DELETE message.
+    fetch('/api', {
+      method: "DELETE",
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(item)
+    }).then(resp => {
+      return resp.text();
+    }).then(dat => {
+      console.log(`DELETE Request complete, resp: ${dat}`)
+    }).catch(error => console.log(error));
   }
 
   // Callback function to add entries to DB.
@@ -115,7 +129,7 @@ class App extends Component {
   // Callback function to delete entries from DB.
   callbackDelData(evArray) {
     for (let i = 0; i < evArray.length; i++)
-      this.delSingleEventToDb(evArray[i]);
+      this.delSingleEventFromDb(evArray[i]);
   }
   
   render() {
