@@ -84,13 +84,21 @@ html,body {
   color: #61dafb;
 }
 
-table tbody { 
+#events_table { 
   height:300px; 
   overflow-y:scroll; 
   display:block; 
 }
 
-table thead { 
+/* table thead { 
   display:block; 
+} */
+
+.event-list {
+  font-size: 11px;
 }
 
+.form-group * {
+  font-size: 11px;
+  pointer-events: none; /* disable form inputs */
+}
