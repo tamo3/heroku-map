@@ -13,9 +13,8 @@ class App extends Component {
 
   state = {
     data: 'test',
-    locations: [  //todo: These are just a test data for debugging. Should be removed for production.
-      
-    ],
+    locations: [],            // event locations list.
+    eventCheckboxStatus: [],  // Keep track of checkbox status, i.e. eventCheckboxStatus[2]==1, then 3rd event is checked.    
   };
 
   componentDidMount() {
@@ -80,6 +79,21 @@ class App extends Component {
     }
   }
 
+  // Callback when event list checkbox is clicked, return number of checked.
+  callbackChkClick(evItem, isMyList) {
+    let stats = this.state.eventCheckboxStatus.slice();
+    stats[evItem.index] = evItem.checked;
+    this.setState({eventCheckboxStatus: stats});
+    if (isMyList) {
+      // todo: what to do? For now, don't do anything. Would be nice if we could change the color of Marker.
+    }
+    else {
+      this.callbackAddDelMarker(evItem, evItem.checked); // Call App.js/callbackAddDelMarker().
+    }
+    const n = stats.reduce((acc,c) => acc + c ? 1 : 0, 0); 
+    return n;
+  }
+
   // Delete all markers on Map.
   callbackDeleteMarkers() {
     this.setState({locations: []}); 
@@ -142,11 +156,12 @@ class App extends Component {
           <div className="box left col-sm-4">
             <Menu  
               locations={this.state.locations}
+              eventCheckboxStatus={this.state.eventCheckboxStatus}
               cbGetData={() => this.callbackGetData()} 
               cbAddData={(x) => this.callbackAddData(x)} 
               cbDelData={(x) => this.callbackDelData(x)}
-              cbAddDel={(x,ad) => this.callbackAddDelMarker(x,ad)}
               cbDelMarker={() => this.callbackDeleteMarkers()}
+              cbChkClick={(x,b) => this.callbackChkClick(x,b)}
             />  
           </div>
           <div className="box main col">

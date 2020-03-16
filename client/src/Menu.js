@@ -51,11 +51,11 @@ class Menu extends Component {
       //   },
     };
   }
-  eventCheckboxStatus = [];  // Keep track of checkbox status, i.e. eventCheckboxStatus[2]==1, then 3rd event is checked.
+    // eventCheckboxStatus = [];  // Keep track of checkbox status, i.e. eventCheckboxStatus[2]==1, then 3rd event is checked.
   isMyList = false; // true = list is from DB (My List), false = list is from API.
 
   checkboxCheked(i) { // If [i]th checkbox is checked or not.
-    if (i < this.eventCheckboxStatus.length && this.eventCheckboxStatus[i])
+    if (i < this.props.eventCheckboxStatus.length && this.props.eventCheckboxStatus[i])
       return true;
     return false;
   }
@@ -103,7 +103,7 @@ class Menu extends Component {
   listEvents() {
     this.clearMarkers();
     this.isMyList = false;
-    this.eventCheckboxStatus = []; // Clear the chekbox status array.
+    /// this.eventCheckboxStatus = []; // Clear the chekbox status array.
     phqEvents.search({within: withinParam})
     .then((ev) => {
       logEventsToConsole(ev);
@@ -118,7 +118,7 @@ class Menu extends Component {
   myList() {
     this.clearMarkers();
     this.isMyList = true;
-    this.eventCheckboxStatus = []; // Clear the chekbox status array.
+    /// this.eventCheckboxStatus = []; // Clear the chekbox status array.
     this.props.cbGetData();  // Call App.js/callbackGetData().
 
     const locations = this.props.locations || []; // To deal with emptyr array.
@@ -138,11 +138,11 @@ class Menu extends Component {
   // How to pass argument to onClick: https://stackoverflow.com/questions/50330124/how-to-pass-checkbox-state-to-onclick-function-in-react
   cbxClicked(event) { // Updated checkbox status array.
     const cbx = event.currentTarget; // console.log(cbx.checked); console.log(cbx.value); 
-    this.eventCheckboxStatus[cbx.value] = cbx.checked;
+///    this.eventCheckboxStatus[cbx.value] = cbx.checked;
 
     // Count checked items // https://stackoverflow.com/questions/49380306/javascript-array-counting-sparse-indexed-element
-    const n = this.eventCheckboxStatus.reduce((acc,c) => acc + c ? 1 : 0, 0); 
-    this.setState({numChecked: n}); // Update number of checked checkboxes.
+    // const n = this.propts.eventCheckboxStatus.reduce((acc,c) => acc + c ? 1 : 0, 0); 
+    // this.setState({numChecked: n}); // Update number of checked checkboxes.
 
     // Set/Clear Marker.
     const x = this.state.eventList[cbx.value];
@@ -151,13 +151,18 @@ class Menu extends Component {
       location: {
         lat: x.location[1], lng: x.location[0],
       },
+      checked: cbx.checked,
+      index: cbx.value,
     };
-    if (this.isMyList) {
-      // todo: what to do? For now, don't do anything. Would be nice if we could change the color of Marker.
-    }
-    else {
-      this.props.cbAddDel(evLoc, cbx.checked); // Call App.js/callbackAddDelMarker().
-    }
+    const n = this.props.cbChkClick(evLoc, this.isMyList);
+    this.setState({numChecked: n});
+
+    // if (this.isMyList) {
+    //   // todo: what to do? For now, don't do anything. Would be nice if we could change the color of Marker.
+    // }
+    // else {
+    //   this.props.cbAddDel(evLoc, cbx.checked); // Call App.js/callbackAddDelMarker().
+    // }
   }
  
   render() {
@@ -186,7 +191,7 @@ class Menu extends Component {
               {eventList.map((x,i) => {
                 return (
                 <tr>
-                  <td><label><input type="checkbox" value={i} onClick={(event)=>this.cbxClicked(event)}></input>{x.title}</label></td>
+                  <td><label><input type="checkbox" value={i} onClick={(event)=>this.cbxClicked(event)} checked={!!this.props.eventCheckboxStatus[i]}></input>{x.title}</label></td>
                   <td>Portland, OR</td>
                   <td>8AM</td>
                 </tr>);})
