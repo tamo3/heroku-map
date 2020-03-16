@@ -20,9 +20,7 @@ const logEventsToConsole = events => {
     console.log(event);
     console.log();
     // See https://developer.predicthq.com/resources/events/#fields for list of all event fields.
-    
     /*document.getElementById("json").innerHTML = JSON.stringify(event, undefined, 2);
-
     Object.keys(event).forEach(function(key){
       console.log(event[key]);
       document.getElementById("json").innerHTML = JSON.stringify(event[key], undefined, 2);
@@ -38,21 +36,6 @@ const withinParam = '10km@45.509871,-122.680712';
 // phqEvents.search({within: withinParam})
 //   .then(logEventsToConsole)
 //   .catch(err => console.error(err));
-// function addEvent() {
-//   var table = document.getElementById("events_table");
-//   var row= document.createElement("tr");
-//   console.log(row);
-//   var event_title = document.createElement("td");
-//   var event_location = document.createElement("td");
-//   var event_time = document.createElement("td");
-//   event_title.innerHTML = document.getElementById("event_title").value;
-//   event_location.innerHTML  = document.getElementById("event_location").value;
-//   event_time.innerHTML  = document.getElementById("event_time").value;
-//   row.appendChild(event_title);
-//   row.appendChild(event_location);
-//   row.appendChild(event_time);
-//   table.children[0].appendChild(row);
-// }
 
 class Menu extends Component {
   constructor(props) {
@@ -212,19 +195,7 @@ class Menu extends Component {
           </table>
         </div>
         <form>
-          <div class="form-group">
-            <label className="event-name">Event Name</label>
-            <input type="text" class="form-control" name="event_title" id="event_title" aria-describedby="event_title" placeholder="Event Name"></input>
-          </div>
-          <div className="form-group">
-            <label for="event-location">Event Location</label>
-            <input type="location" class="form-control" name="event_location" id="event_location" placeholder="Event Location"></input>
-          </div>
-          <div class="form-group">
-            <label className="event-time">Event Time</label>
-            <input type="time" class="form-control" name="event_time" id="event_time" placeholder="Event Time"></input>
-          </div>
-          <div>
+          <div class="addDelButton">
             <input type="button" disabled={this.state.numChecked===0} onClick={() => this.readWriteData()} id="add" class="btn btn-info bg-primary" value={str}></input>
             {/* <input type="button" onClick={() => addEvent()} id="add" class="btn btn-info bg-primary" value="Add Event"></input> */}
           </div>
