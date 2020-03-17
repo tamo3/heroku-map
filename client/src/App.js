@@ -79,6 +79,8 @@ class App extends Component {
   }
 
   // Add or delete a single Marker.
+
+  // todo: this logic is not working anymore -- need to refine!
   callbackAddDelMarker(evItem, add) {
     const match = this.state.locations.filter(x => this.equals(x, evItem));
     // const match = this.state.locations.filter(x => x === evItem);
