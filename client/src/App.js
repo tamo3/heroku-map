@@ -2,6 +2,16 @@ import React, { Component } from 'react';
 import MapContainer from './Map.js';
 import { Menu } from './Menu.js';
 import './App.css';
+import Client from 'predicthq';
+
+// Client Secret : Wkuwi2B84jBH27rSfte0nAvOtI69HI7hCmVrouV4QIXm3tARXa_Sog
+// Access Token : TODGDOgZORwsYmZ-n_b4-on0JaWM2Vuqn8O2K-KU
+// Initialises PredictHQ client library using your access token
+// Note: You can find/create your access tnoken at https://control.predicthq.com/clients
+const client = new Client({access_token: 'Gg2EsEibNkluAwm9FLp21gqOLa6cmIMODSo-D2-D'});
+const phqEvents = client.events;
+// 10km range around the -36.844480,174.768368 geopoint
+const withinParam = '10km@45.509871,-122.680712';
 
 
 
@@ -14,11 +24,13 @@ class App extends Component {
   state = {
     data: 'test',
     locations: [],            // event locations list.
-    eventCheckboxStatus: [],  // Keep track of checkbox status, i.e. eventCheckboxStatus[2]==1, then 3rd event is checked.    
+    eventCheckboxStatus: [],  // Keep track of checkbox status, i.e. eventCheckboxStatus[2]==1, then 3rd event is checked.  
+    numChecked: 0,            // Keep track of the number of checked checkboxes.  
+    isMyList: false,          // Event list is from My List (DB), or from PHQ API.
   };
 
   componentDidMount() {
-    fetch('/express_backend')
+    fetch('/express_backend') // Just for test/deubg.
       .then(response => {
         return response.text();
       })
@@ -53,7 +65,9 @@ class App extends Component {
         };
         evLocations.push(evLoc); // Add to the array.
       })
-      this.setState({locations: evLocations}); // Set the array as the new location.
+      this.setState({
+        isMyList: true,
+        locations: evLocations}); // Set the array as the new location.
     });
   }
 
@@ -83,21 +97,37 @@ class App extends Component {
   callbackChkClick(evItem, isMyList) {
     let stats = this.state.eventCheckboxStatus.slice();
     stats[evItem.index] = evItem.checked;
-    this.setState({eventCheckboxStatus: stats});
     if (isMyList) {
       // todo: what to do? For now, don't do anything. Would be nice if we could change the color of Marker.
     }
     else {
-      this.callbackAddDelMarker(evItem, evItem.checked); // Call App.js/callbackAddDelMarker().
+      this.callbackAddDelMarker(evItem, evItem.checked);
     }
     const n = stats.reduce((acc,c) => acc + c ? 1 : 0, 0); 
-    return n;
+    this.setState({
+      numChecked: n,
+      eventCheckboxStatus: stats});
   }
 
   // Delete all markers on Map.
   callbackDeleteMarkers() {
     this.setState({locations: []}); 
   }
+
+  callbackFindEvents() {
+    phqEvents.search({within: withinParam})
+    .then((ev) => {
+      // logEventsToConsole(ev);
+      console.log(ev.result.results.length);
+      console.log(`ID=${ev.result.results[0].id} Title=${ev.result.results[0].title} loc=${ev.result.results[0].location[1]},${ev.result.results[0].location[0]}`);
+      this.setState({
+        isMyList: false,
+        eventCheckboxStatus: [],
+        locations: ev.result.results}); // Assign the result array to eventList.
+    })
+    .catch(err => console.error(err));
+  }
+
 
   // Add a single event to DB.
   addSingleEventToDb(jdat) {
@@ -157,11 +187,15 @@ class App extends Component {
             <Menu  
               locations={this.state.locations}
               eventCheckboxStatus={this.state.eventCheckboxStatus}
+              numChecked={this.state.numChecked}
+              eventList={this.state.locations}
+              isMyList={this.state.isMyList}
               cbGetData={() => this.callbackGetData()} 
               cbAddData={(x) => this.callbackAddData(x)} 
               cbDelData={(x) => this.callbackDelData(x)}
               cbDelMarker={() => this.callbackDeleteMarkers()}
               cbChkClick={(x,b) => this.callbackChkClick(x,b)}
+              cbFindEvents={() => this.callbackFindEvents()}
             />  
           </div>
           <div className="box main col">
