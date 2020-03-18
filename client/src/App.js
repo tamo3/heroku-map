@@ -22,7 +22,7 @@ class App extends Component {
   }
 
   state = {
-    data: 'test',
+    //data: 'test',           // For debug.
     eventList: [],            // event locations list.
     eventCheckboxStatus: [],  // Keep track of checkbox status, i.e. eventCheckboxStatus[2]==1, then 3rd event is checked.  
     numChecked: 0,            // Keep track of the number of checked checkboxes.  
@@ -49,13 +49,8 @@ class App extends Component {
       return resp.json();
     })
     .then(jdat => {
-      console.log(jdat);
-      this.setState({ data: JSON.stringify(jdat)}); // Print to debug area.
-      let evLocations = []; // New array.
-      jdat.forEach(item =>{
-        console.log("Name: ", item.name);
-        this.setState({ data: JSON.stringify(item.name)});
-        console.log("Location Coordinates: ", item.loc.coordinates);
+      //this.setState({ data: JSON.stringify(jdat)}); // Print to debug area.
+      const evLocations = jdat.map((item, i) => {
         const evLoc = { // An event from DB.
           title: JSON.stringify(item.name),
           location: {
@@ -63,8 +58,8 @@ class App extends Component {
             lng: item.loc.coordinates[0]
           }
         };
-        evLocations.push(evLoc); // Add to the array.
-      })
+        return evLoc;
+      });
       this.setState({
         isMyList: true,
         eventCheckboxStatus: [],
@@ -73,12 +68,10 @@ class App extends Component {
   }
 
   // Compare 2 events and return true if they are the same.
-  equals(a, b) {
-    // Some what deep comparison. NOTE: a===b didn't work.
-    const jc = JSON.stringify(a) === JSON.stringify(b);
-    return jc;
-  }
-
+  // equals(a, b) { // Some what deep comparison. NOTE: a===b didn't work.
+  //   const jc = JSON.stringify(a) === JSON.stringify(b);
+  //   return jc;
+  // }
  
   // Callback when event list checkbox is clicked, return number of checked.
   callbackChkClick(evItem, isMyList) {
@@ -98,12 +91,13 @@ class App extends Component {
       eventList: []}); 
   }
 
-  // Convert events found by API to our data format.
-  convertToEventList(findResult) {
-    const list = findResult || []; // To deal with empty array.
-    if (list.length > 0) {
+  callbackFindEvents() {
+    phqEvents.search({within: withinParam})
+    .then((ev) => {
+      // console.log(`ID=${ev.result.results[0].id} Title=${ev.result.results[0].title} loc=${ev.result.results[0].location[1]},${ev.result.results[0].location[0]}`);
+      const list = ev.result.results || [];
       const evArray = list.map((x, i) => { // Create event array.
-        const item = { // JSON object for sending to DB.
+        const item = { 
           title: x.title,
           location: {
             lat: x.location[1],
@@ -112,16 +106,6 @@ class App extends Component {
         };
         return item;
       });
-      return evArray;
-    }
-    return null;
-  }
-
-  callbackFindEvents() {
-    phqEvents.search({within: withinParam})
-    .then((ev) => {
-      // console.log(`ID=${ev.result.results[0].id} Title=${ev.result.results[0].title} loc=${ev.result.results[0].location[1]},${ev.result.results[0].location[0]}`);
-      const evArray = this.convertToEventList(ev.result.results);
       this.setState({
         isMyList: false,
         eventCheckboxStatus: [],
@@ -132,8 +116,7 @@ class App extends Component {
 
 
   // Add a single event to DB.
-  addSingleEventToDb(jdat) {
-    // Send POST message.
+  addSingleEventToDb(jdat) { // Send POST message.
     fetch('/api', {
       method: "POST",
       headers: {
@@ -167,17 +150,16 @@ class App extends Component {
     }).catch(error => console.log(error));
   }
 
-  // Callback function to add entries to DB.
-  callbackAddData(evArray) {
-    for (let i = 0; i < evArray.length; i++)
-      this.addSingleEventToDb(evArray[i]);
+  // Callback function to add/delete entries to DB.
+  callbackAddDelData(evArray, add) {
+    for (let i = 0; i < evArray.length; i++) {
+      if (add) 
+        this.addSingleEventToDb(evArray[i]);
+      else 
+        this.delSingleEventFromDb(evArray[i]);
+    }
   }
-  // Callback function to delete entries from DB.
-  callbackDelData(evArray) {
-    for (let i = 0; i < evArray.length; i++)
-      this.delSingleEventFromDb(evArray[i]);
-  }
-  
+
   render() {
     return (
       <div className="App">
@@ -192,8 +174,7 @@ class App extends Component {
               isMyList={this.state.isMyList}
               numChecked={this.state.numChecked}
               cbGetData={() => this.callbackGetData()}
-              cbAddData={(x) => this.callbackAddData(x)}
-              cbDelData={(x) => this.callbackDelData(x)}
+              cbAddDelData={(x,a) => this.callbackAddDelData(x,a)}
               cbDelMarker={() => this.callbackDeleteMarkers()}
               cbChkClick={(x, b) => this.callbackChkClick(x, b)}
               cbFindEvents={() => this.callbackFindEvents()}

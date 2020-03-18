@@ -32,12 +32,7 @@ class Menu extends Component {
           };
           return item;
         });
-        if (this.props.isMyList) {
-          this.props.cbDelData(evArray); // Call App.js/callbackDelData().
-        }
-        else {
-          this.props.cbAddData(evArray); // Call App.js/callbackAddData().
-        }
+        this.props.cbAddDelData(evArray, !this.props.isMyList); // Call App.js/callbackAddDelData().
       }
     }
   }
