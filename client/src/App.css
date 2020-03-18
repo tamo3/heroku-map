@@ -91,7 +91,10 @@ html,body {
   overflow-y:scroll; 
   display:block; 
 }
-.addDelButton {
+.find-btn {
+  background-color: red;
+}
+.add-del-btn {
   height: 20px;
 }
 /* table thead { 

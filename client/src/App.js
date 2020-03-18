@@ -67,6 +67,7 @@ class App extends Component {
       })
       this.setState({
         isMyList: true,
+        eventCheckboxStatus: [],
         eventList: evLocations}); // Set the array as the new location.
     });
   }
@@ -78,33 +79,11 @@ class App extends Component {
     return jc;
   }
 
-  // Add or delete a single Marker.
-
-  // todo: this logic is not working anymore -- need to refine!
-  // callbackAddDelMarker(evItem, add) {
-  //   const match = this.state.eventList.filter(x => this.equals(x, evItem));
-  //   // const match = this.state.locations.filter(x => x === evItem);
-  //   if (add && match.length === 0) { // Add mode && the event hasn't been added.
-  //     let evLocations = this.state.eventList.slice(0); // Copy locations.
-  //     evLocations.push(evItem);
-  //     this.setState({locations: evLocations});
-  //   }
-  //   else if (!add && match.length > 0) { // Del mode && the event is in the list.
-  //     const evLocations = this.state.eventList.filter((x) => !this.equals(x, evItem));
-  //     this.setState({locations: evLocations});
-  //   }
-  // }
-
+ 
   // Callback when event list checkbox is clicked, return number of checked.
   callbackChkClick(evItem, isMyList) {
     let stats = this.state.eventCheckboxStatus.slice();
     stats[evItem.index] = evItem.checked;
-    if (isMyList) {
-      // todo: what to do? For now, don't do anything. Would be nice if we could change the color of Marker.
-    }
-    else {
-      // this.callbackAddDelMarker(evItem, evItem.checked);
-    }
     const n = stats.reduce((acc,c) => acc + c ? 1 : 0, 0); 
     this.setState({
       numChecked: n,
@@ -113,9 +92,13 @@ class App extends Component {
 
   // Delete all markers on Map.
   callbackDeleteMarkers() {
-    this.setState({eventList: []}); 
+    this.setState({
+      numChecked: 0,
+      eventCheckboxStatus: [],
+      eventList: []}); 
   }
 
+  // Convert events found by API to our data format.
   convertToEventList(findResult) {
     const list = findResult || []; // To deal with empty array.
     if (list.length > 0) {
@@ -137,14 +120,12 @@ class App extends Component {
   callbackFindEvents() {
     phqEvents.search({within: withinParam})
     .then((ev) => {
-      // logEventsToConsole(ev);
-      console.log(ev.result.results.length);
-      console.log(`ID=${ev.result.results[0].id} Title=${ev.result.results[0].title} loc=${ev.result.results[0].location[1]},${ev.result.results[0].location[0]}`);
+      // console.log(`ID=${ev.result.results[0].id} Title=${ev.result.results[0].title} loc=${ev.result.results[0].location[1]},${ev.result.results[0].location[0]}`);
       const evArray = this.convertToEventList(ev.result.results);
       this.setState({
         isMyList: false,
         eventCheckboxStatus: [],
-        eventList: evArray}); // Assign the result array to eventList.
+        eventList: evArray}); 
     })
     .catch(err => console.error(err));
   }

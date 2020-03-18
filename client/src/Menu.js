@@ -21,15 +21,14 @@ class Menu extends Component {
       if (list.length > 0) {
         const evArray = list.map((x, i) => { // Create event array.
           const item = { // JSON object for sending to DB.
-            start: x.start,
-            end: x.end,
             name: x.title,
             loc: {
               type: "Point",
-              coordinates: [x.location[0], x.location[1]]  // [lng, lat] -- different from Google Map!  Need to swap!
+              coordinates: [x.location.lng, x.location.lat]  // [lng, lat] -- different from Google Map!  Need to swap!
             },
-            web: '',
-            desc: x.category,
+            // start: x.start,
+            // end: x.end,
+            // web: '',
           };
           return item;
         });
@@ -67,7 +66,7 @@ class Menu extends Component {
     return (
     <div>
         <div >
-          <div className="row mb-1 "><button type="button" className="dash-button btn btn-block btn-primary" onClick={() => this.props.cbFindEvents()} title="Access current events from API">Find Events</button></div>
+          <div className="row mb-1 "><button type="button" className="dash-button btn btn-block btn-primary find-btn" onClick={() => this.props.cbFindEvents()} title="Access current events from API">Find Events</button></div>
           <div className="row mb-1 "><button type="button" className="dash-button btn btn-block btn-primary" onClick={() => this.props.cbGetData()} title="Get events from DB">My List</button></div>
           <div className="row mb-1 "><button type="button" className="dash-button btn btn-block btn-primary" onClick={() => this.props.cbDelMarker()} title="Clear markers from map">Clear Markers</button></div>
           <div className="row mb-1 "><About /></div>
@@ -95,7 +94,7 @@ class Menu extends Component {
           </table>
         </div>
         <form>
-          <div class="addDelButton">
+          <div class="add-del-btn">
             <input type="button" disabled={this.props.numChecked===0} onClick={() => this.readWriteData()} id="add" class="btn btn-info bg-primary" value={str}></input>
           </div>
         </form>
