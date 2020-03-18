@@ -14,7 +14,6 @@ export class MapContainer extends Component {
       showingInfoWindow: false,
       activeMarker: {},
       selectedPlace: {},
-      // locations: props.locations,
     };
   }
   onMarkerClick(props, marker, e) {
@@ -25,45 +24,64 @@ export class MapContainer extends Component {
     });
   }
 
+  // Return color object for Marker.
+  markerColor(color) {
+    color = {
+      url: `http://maps.google.com/mapfiles/ms/icons/${color}.png`
+    };
+    return color;
+  }
+
+  // Return Marker icon with different colors based on the state.
+  markerIcon(i) {
+    if (this.props.eventCheckboxStatus[i] === true)
+      return this.markerColor('yellow');  // Selected => yellow.
+    if (this.props.isMyList)
+      return this.markerColor('blue');    // From my list (DB) => blue.
+    else
+      return this.markerColor('red');     // From API => red.
+  }
 
   render() {
     if (!this.props.google) {
       return <div>Loading...</div>;
     }
 
-    // const google = this.props.google;
+    const marker = this.props.eventList.map((item, i) => <Marker
+      name={item.title}
+      title={item.title}
+      position={{ lat: item.location.lat, lng: item.location.lng }}
+      onClick={this.onMarkerClick}
+      icon={this.markerIcon(i)}
+    />);
+
 
     return (
       <div
-       style={{
-         position: "relative",
-         height: "calc(100vh - 80px)"
-       }}
-     >
-       <Map 
-         style={{}} google={this.props.google} zoom={14}
-         initialCenter={{
-           lat: 45.509871,
-           lng:  -122.680712
-         }}>
-         {this.props.locations.map((item, i) => <Marker 
-           name={item.title}
-           title={item.title}
-           position={{lat: item.location.lat, lng: item.location.lng}} 
-           onClick={this.onMarkerClick}
-           />) }
+        style={{
+          position: "relative",
+          height: "calc(100vh - 80px)"
+        }}
+      >
+        <Map
+          style={{}} google={this.props.google} zoom={14}
+          initialCenter={{
+            lat: 45.509871,
+            lng: -122.680712
+          }}>
+          {marker}
 
-         <InfoWindow
-           marker={this.state.activeMarker}
-           visible={this.state.showingInfoWindow}
-         >
-           <div>
-             <h1>{this.state.selectedPlace.name}</h1>
-           </div>
-         </InfoWindow>
-       </Map>
-     </div>
-   );
+          <InfoWindow
+            marker={this.state.activeMarker}
+            visible={this.state.showingInfoWindow}
+          >
+            <div>
+              <h1>{this.state.selectedPlace.name}</h1>
+            </div>
+          </InfoWindow>
+        </Map>
+      </div>
+    );
   }
 }
 

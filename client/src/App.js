@@ -23,7 +23,7 @@ class App extends Component {
 
   state = {
     data: 'test',
-    locations: [],            // event locations list.
+    eventList: [],            // event locations list.
     eventCheckboxStatus: [],  // Keep track of checkbox status, i.e. eventCheckboxStatus[2]==1, then 3rd event is checked.  
     numChecked: 0,            // Keep track of the number of checked checkboxes.  
     isMyList: false,          // Event list is from My List (DB), or from PHQ API.
@@ -67,7 +67,7 @@ class App extends Component {
       })
       this.setState({
         isMyList: true,
-        locations: evLocations}); // Set the array as the new location.
+        eventList: evLocations}); // Set the array as the new location.
     });
   }
 
@@ -81,19 +81,19 @@ class App extends Component {
   // Add or delete a single Marker.
 
   // todo: this logic is not working anymore -- need to refine!
-  callbackAddDelMarker(evItem, add) {
-    const match = this.state.locations.filter(x => this.equals(x, evItem));
-    // const match = this.state.locations.filter(x => x === evItem);
-    if (add && match.length === 0) { // Add mode && the event hasn't been added.
-      let evLocations = this.state.locations.slice(0); // Copy locations.
-      evLocations.push(evItem);
-      this.setState({locations: evLocations});
-    }
-    else if (!add && match.length > 0) { // Del mode && the event is in the list.
-      const evLocations = this.state.locations.filter((x) => !this.equals(x, evItem));
-      this.setState({locations: evLocations});
-    }
-  }
+  // callbackAddDelMarker(evItem, add) {
+  //   const match = this.state.eventList.filter(x => this.equals(x, evItem));
+  //   // const match = this.state.locations.filter(x => x === evItem);
+  //   if (add && match.length === 0) { // Add mode && the event hasn't been added.
+  //     let evLocations = this.state.eventList.slice(0); // Copy locations.
+  //     evLocations.push(evItem);
+  //     this.setState({locations: evLocations});
+  //   }
+  //   else if (!add && match.length > 0) { // Del mode && the event is in the list.
+  //     const evLocations = this.state.eventList.filter((x) => !this.equals(x, evItem));
+  //     this.setState({locations: evLocations});
+  //   }
+  // }
 
   // Callback when event list checkbox is clicked, return number of checked.
   callbackChkClick(evItem, isMyList) {
@@ -103,7 +103,7 @@ class App extends Component {
       // todo: what to do? For now, don't do anything. Would be nice if we could change the color of Marker.
     }
     else {
-      this.callbackAddDelMarker(evItem, evItem.checked);
+      // this.callbackAddDelMarker(evItem, evItem.checked);
     }
     const n = stats.reduce((acc,c) => acc + c ? 1 : 0, 0); 
     this.setState({
@@ -113,7 +113,25 @@ class App extends Component {
 
   // Delete all markers on Map.
   callbackDeleteMarkers() {
-    this.setState({locations: []}); 
+    this.setState({eventList: []}); 
+  }
+
+  convertToEventList(findResult) {
+    const list = findResult || []; // To deal with empty array.
+    if (list.length > 0) {
+      const evArray = list.map((x, i) => { // Create event array.
+        const item = { // JSON object for sending to DB.
+          title: x.title,
+          location: {
+            lat: x.location[1],
+            lng: x.location[0]
+          }
+        };
+        return item;
+      });
+      return evArray;
+    }
+    return null;
   }
 
   callbackFindEvents() {
@@ -122,10 +140,11 @@ class App extends Component {
       // logEventsToConsole(ev);
       console.log(ev.result.results.length);
       console.log(`ID=${ev.result.results[0].id} Title=${ev.result.results[0].title} loc=${ev.result.results[0].location[1]},${ev.result.results[0].location[0]}`);
+      const evArray = this.convertToEventList(ev.result.results);
       this.setState({
         isMyList: false,
         eventCheckboxStatus: [],
-        locations: ev.result.results}); // Assign the result array to eventList.
+        eventList: evArray}); // Assign the result array to eventList.
     })
     .catch(err => console.error(err));
   }
@@ -179,29 +198,32 @@ class App extends Component {
   }
   
   render() {
-      return (
+    return (
       <div className="App">
         <header className="App-header">
           <h1 className="App-title">PDX Event Map!</h1>
         </header>
         <div className="container row">
           <div className="box left col-sm-4">
-            <Menu  
-              locations={this.state.locations}
+            <Menu
+              eventList={this.state.eventList}
               eventCheckboxStatus={this.state.eventCheckboxStatus}
-              numChecked={this.state.numChecked}
-              eventList={this.state.locations}
               isMyList={this.state.isMyList}
-              cbGetData={() => this.callbackGetData()} 
-              cbAddData={(x) => this.callbackAddData(x)} 
+              numChecked={this.state.numChecked}
+              cbGetData={() => this.callbackGetData()}
+              cbAddData={(x) => this.callbackAddData(x)}
               cbDelData={(x) => this.callbackDelData(x)}
               cbDelMarker={() => this.callbackDeleteMarkers()}
-              cbChkClick={(x,b) => this.callbackChkClick(x,b)}
+              cbChkClick={(x, b) => this.callbackChkClick(x, b)}
               cbFindEvents={() => this.callbackFindEvents()}
-            />  
+            />
           </div>
           <div className="box main col">
-            <MapContainer locations={this.state.locations}/>
+            <MapContainer
+              eventList={this.state.eventList}
+              eventCheckboxStatus={this.state.eventCheckboxStatus}
+              isMyList={this.state.isMyList}
+            />
           </div>
         </div>
       </div>
